@@ -70,7 +70,7 @@ class Facility: public FacilityType {
             return status;
         };
         const string toString() const{
-            return "facility " + name + " " ;//" "+ price+" " + lifeQuality_score +" "+ economy_score +" "+ environment_score; 
+            return "facility    " + name + " " ;//" "+ price+" " + lifeQuality_score +" "+ economy_score +" "+ environment_score; 
         };
 
     private:
