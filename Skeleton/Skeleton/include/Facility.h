@@ -19,11 +19,11 @@ enum class FacilityCategory {
 class FacilityType {
     public:
         FacilityType(const string &name, const FacilityCategory category, const int price, const int lifeQuality_score, const int economy_score, const int environment_score);
-        const string &getName() const;
+        const string &getName();
         int getCost() const;
         int getLifeQualityScore() const;
         int getEnvironmentScore() const;
-        int getEconomyScore() const;
+        int getEconomyScore();
         FacilityCategory getCategory() const;
 
     protected:
@@ -34,7 +34,6 @@ class FacilityType {
         const int economy_score;
         const int environment_score;
 };
-
 
 
 class Facility: public FacilityType {
