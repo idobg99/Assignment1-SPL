@@ -2,6 +2,7 @@
 enum class FacilityStatus;
 enum class FacilityCategory;
 
+<<<<<<< HEAD
 class FacilityType {
 
     public:
@@ -78,3 +79,6 @@ class Facility: public FacilityType {
         FacilityStatus status;
         int timeLeft;
 };
+=======
+idodo testing
+>>>>>>> 4acb26b9b4916f047c5d32973e005e53585556bf
