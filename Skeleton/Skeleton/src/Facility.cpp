@@ -2,8 +2,6 @@
 enum class FacilityStatus;
 enum class FacilityCategory;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 class FacilityType {
 
     public:
@@ -40,14 +38,19 @@ class FacilityType {
 class Facility: public FacilityType {
 
     public:
-        Facility::Facility(const string &name, const string &settlementName, const FacilityCategory category, const int price, const int lifeQuality_score, const int economy_score, const int environment_score):
+        Facility(const string &name, const string &settlementName, const FacilityCategory category, const int price, const int lifeQuality_score, const int economy_score, const int environment_score):
         FacilityType (name, category, price, lifeQuality_score, economy_score, environment_score),settlementName(settlementName)        
         {
             setStatus(FacilityStatus::UNDER_CONSTRUCTIONS);                   
             timeLeft = price;
         };
 
-        Facility::Facility(FacilityType &type, const string &settlementName);
+        Facility(FacilityType &type, const string &settlementName):
+        FacilityType (name, category, price, lifeQuality_score, economy_score, environment_score),settlementName(settlementName)        
+        {
+            setStatus(FacilityStatus::UNDER_CONSTRUCTIONS);                   
+            timeLeft = price;
+        };
 
         const string &getSettlementName() const{
             return settlementName;
@@ -72,7 +75,8 @@ class Facility: public FacilityType {
             return status;
         };
         const string toString() const{
-            return "facility " + name + " " ;//" "+ price+" " + lifeQuality_score +" "+ economy_score +" "+ environment_score; 
+            return "facility " +name+ " "+ std::to_string(static_cast<int>(category))+" "+ std::to_string(price)+ " "+ 
+            std::to_string(lifeQuality_score)+ " "+ std::to_string(economy_score)+ " "+ std::to_string(environment_score);      
         };
 
     private:
@@ -80,9 +84,3 @@ class Facility: public FacilityType {
         FacilityStatus status;
         int timeLeft;
 };
-=======
-idodo testing
->>>>>>> 4acb26b9b4916f047c5d32973e005e53585556bf
-=======
-idodo testing
->>>>>>> 4acb26b9b4916f047c5d32973e005e53585556bf
