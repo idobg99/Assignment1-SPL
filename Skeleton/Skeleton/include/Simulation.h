@@ -4,6 +4,7 @@
 #include "Facility.h"
 #include "Plan.h"
 #include "Settlement.h"
+#include <ifstream>
 using std::string;
 using std::vector;
 
