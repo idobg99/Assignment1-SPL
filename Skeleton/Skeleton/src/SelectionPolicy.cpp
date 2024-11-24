@@ -4,6 +4,7 @@
 #include <algorithm>
 
 NaiveSelection::NaiveSelection():lastSelectedIndex(0){};
+
 const FacilityType& NaiveSelection::selectFacility(const vector<FacilityType>& facilitiesOptions) {
     if (facilitiesOptions.empty()) {
         throw std::out_of_range("No facilities available for selection.");

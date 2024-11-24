@@ -14,6 +14,8 @@ Plan::Plan(const int planId, const Settlement &settlement, SelectionPolicy *sele
     economy_score(0),
     environment_score(0) {};
 
+
+
 // Getter for life quality score
 const int Plan::getlifeQualityScore() const {
     return life_quality_score;
