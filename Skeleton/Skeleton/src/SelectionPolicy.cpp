@@ -26,9 +26,6 @@ BalancedSelection::BalancedSelection(int LifeQualityScore, int EconomyScore, int
         EconomyScore(EconomyScore),
         EnvironmentScore(EnvironmentScore) {};
 const FacilityType& BalancedSelection::selectFacility(const vector<FacilityType>& facilitiesOptions) {
-    if (facilitiesOptions.empty()) {
-        throw std::out_of_range("No facilities available for selection.");
-    }
 
     int minDistance = std::numeric_limits<int>::max();
     const FacilityType* selectedFacility = nullptr;
@@ -54,4 +51,29 @@ const FacilityType& BalancedSelection::selectFacility(const vector<FacilityType>
     }
 
     return *selectedFacility;
+};
+
+const string BalancedSelection::toString() const {
+    return "Balanced Selection Policy: Life Quality-" + std::to_string(LifeQualityScore) + " , EconomyScore-" 
+                                                      + std::to_string(EconomyScore) + " , EnvironmentScore-"
+                                                      + std::to_string(EnvironmentScore);
+};
+
+EconomySelection::EconomySelection(): lastSelectedIndex(0) {};
+
+const FacilityType& EconomySelection::selectFacility(const vector<FacilityType>& facilitiesOptions){
+    std::size_t startIndex = lastSelectedIndex;
+    std::size_t i = startIndex;
+
+    do {
+        const FacilityType& facility = facilitiesOptions[i];
+        if (facility.getCategory() == FacilityCategory::ECONOMY) {
+            lastSelectedIndex = (i + 1) % facilitiesOptions.size();  // Update to next index circularly
+            return facility;
+        }
+
+        i = (i + 1) % facilitiesOptions.size();  // Move to the next index
+    } while (i != startIndex);  // Stop if we've checked all elements
+
+    throw std::runtime_error("No economy facility found");
 };
