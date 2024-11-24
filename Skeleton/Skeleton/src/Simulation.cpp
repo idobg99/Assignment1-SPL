@@ -14,13 +14,13 @@ Simulation::Simulation(const string &configFilePath):isRunning(false), planCount
     string line;
     while (getline(configFile, line)){       
         vector<string> inf(Auxiliary::parseArguments(line));
-        if (inf[0] =="settlement"){
+        if (inf[0] == "settlement"){
             Simulation::addSettlement(Settlement (inf[1],SettlementType(static_cast<SettlementType>((stoi(inf[2])))) ));
         }
-        else if (inf[0] =="facility"){
+        else if (inf[0] == "facility"){
             Simulation::addFacility(FacilityType(inf[1],static_cast<FacilityCategory>((stoi(inf[2]))),stoi(inf[3]),stoi(inf[4]), stoi(inf[5]), stoi(inf[6])));
         }
-        else if (inf[0] =="plan"){
+        else if (inf[0] == "plan"){
             if (inf[2] == "eco"){
                 Simulation::addPlan(Simulation::getSettlement(inf[1]),new NaiveSelection());
             }    
@@ -43,7 +43,7 @@ void Simulation::start(){
         if (userCommand == "close") {           
             Simulation::close();
             break;
-        }    
+        }
 }};
 
 void Simulation::addPlan(const Settlement &settlement, SelectionPolicy *selectionPolicy){
