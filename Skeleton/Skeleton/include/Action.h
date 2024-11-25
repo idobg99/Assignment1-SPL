@@ -17,8 +17,8 @@ class BaseAction{
         virtual const string toString() const=0;
         virtual BaseAction* clone() const = 0;
         virtual ~BaseAction() = default;
-        const string statusToString();
-        
+        const string stringStatus;
+
     protected:
         void complete();
         void error(string errorMsg);
@@ -26,7 +26,7 @@ class BaseAction{
 
     private:
         string errorMsg;
-        ActionStatus status;
+        ActionStatus status;        
 };
 
 class SimulateStep : public BaseAction {

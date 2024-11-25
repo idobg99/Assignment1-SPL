@@ -16,7 +16,6 @@ Simulation::Simulation(const string &configFilePath):isRunning(false), planCount
 
     while (getline(configFile, line)){       
         vector<string> inf(Auxiliary::parseArguments(line));
-<<<<<<< HEAD
         if (inf[0]=="settlement"){            
             addSettlement(new Settlement(inf[1],SettlementType(static_cast<SettlementType>((stoi(inf[2])))) ));
         }
@@ -28,19 +27,6 @@ Simulation::Simulation(const string &configFilePath):isRunning(false), planCount
             if (policy!=nullptr) {           
             addPlan(getSettlement(inf[1]),policy);
             }                  
-=======
-        if (inf[0] == "settlement"){
-            Simulation::addSettlement(Settlement (inf[1],SettlementType(static_cast<SettlementType>((stoi(inf[2])))) ));
-        }
-        else if (inf[0] == "facility"){
-            Simulation::addFacility(FacilityType(inf[1],static_cast<FacilityCategory>((stoi(inf[2]))),stoi(inf[3]),stoi(inf[4]), stoi(inf[5]), stoi(inf[6])));
-        }
-        else if (inf[0] == "plan"){
-            if (inf[2] == "eco"){
-                Simulation::addPlan(Simulation::getSettlement(inf[1]),new NaiveSelection());
-            }    
-            //to complete- 3 other policies        
->>>>>>> ab005dab3871364d6f33980748044bf273e94b2f
         }        
     }
     configFile.close();
@@ -54,19 +40,19 @@ void Simulation::start(){
         cin >> userCommand;
         vector<string> inf(Auxiliary::parseArguments(userCommand));
 
-        if (inf[0]=="step"){
+        if (inf[0]=="step"){   //need to complete in action class.
             SimulateStep* action = new SimulateStep(stoi(inf[1]));
             addAction(action);
         }
-
         else if (inf[0]=="plan"){           
             addAction(new AddPlan (inf[1], inf[2]));                   
         }
-        
         else if (inf[0]=="settlement"){
             SettlementType type = SettlementType(static_cast<SettlementType>((stoi(inf[2]))));            
-            addAction(new AddSettlement(inf[1],type));
-           
+            addAction(new AddSettlement(inf[1],type));          
+        }
+        else if (inf[0]=="planStatus"){           
+            addAction(new PrintPlanStatus(stoi(inf[1]))); 
         }
         //to complete - executing the commands accordding to the user
 
@@ -74,7 +60,7 @@ void Simulation::start(){
         if (userCommand == "close") {           
             Simulation::close();
             break;
-        }
+            }    
 }};
 
 void Simulation::addPlan(const Settlement *settlement, SelectionPolicy *selectionPolicy){
@@ -96,7 +82,7 @@ bool Simulation::addSettlement(Settlement *settlement){
 
 bool Simulation::addFacility(FacilityType facility){
     for (FacilityType f: facilitiesOptions){
-        if (f.getName() == facility.getName()) {return false;}
+        if (f.getName()==facility.getName()) {return false;}
     }
     facilitiesOptions.push_back(facility);
     return true;
@@ -113,6 +99,10 @@ Settlement* Simulation::getSettlement(const string &settlementName){
     for (Settlement* s:settlements){
         if ((*s).getName()==settlementName) {return s;}
     }    
+};
+bool Simulation::isPlanExist(const int planId){
+    if (planId>plans.size()){ return false;}
+    return true;
 };
 
 Plan &Simulation::getPlan(const int planID){
@@ -143,6 +133,8 @@ SelectionPolicy* Simulation::stringToPolicy (const string policy){
     }
     else return nullptr;
 };
+
+
     
 
 

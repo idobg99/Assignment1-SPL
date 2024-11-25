@@ -1,28 +1,25 @@
 #include "Action.h"
 #include <iostream>
+#include <Facility.h>
 using namespace std;
 enum class SettlementType;
 enum class FacilityCategory;
 enum class ActionStatus;
 
 //Implementing BaseAction class:
-BaseAction::BaseAction() : errorMsg(""),status(){};
+BaseAction::BaseAction() : errorMsg(""),status(), stringStatus(""){};
 ActionStatus BaseAction::getStatus() const{
     return status;
 };
 void BaseAction::complete(){
     status = ActionStatus::COMPLETED;
+    stringStatus = " COMPLETED";
 };    
 void BaseAction::error(string errorMsg){
     errorMsg = errorMsg; 
     cout << errorMsg << endl;   
-    status = ActionStatus::ERROR;    
-};
-const string BaseAction::statusToString(){
-    if (status==ActionStatus::ERROR){
-        return "ERROR";
-    }
-    else return "COMPLETED";
+    status = ActionStatus::ERROR; 
+    stringStatus = " ERROR";   
 };
 
 const string &BaseAction::getErrorMsg() const{
@@ -34,16 +31,14 @@ SimulateStep::SimulateStep(const int numOfSteps):numOfSteps(numOfSteps){};
 void SimulateStep::act(Simulation &simulation) {};  //to complete after the step methods.
 
 const string SimulateStep::toString() const {
-    return "SimulateStep " + numOfSteps;
+    return "SimulateStep " + to_string(numOfSteps)+stringStatus;
 };
 SimulateStep* SimulateStep::clone() const {
     return new SimulateStep(*this);
 };
 
-
 //Implementing AddPlan Action class:
 AddPlan::AddPlan(const string &settlementName, const string &selectionPolicy):settlementName(settlementName),selectionPolicy(selectionPolicy){};
-
 void AddPlan::act(Simulation &simulation){
     Settlement* settlement = simulation.getSettlement(settlementName); 
     SelectionPolicy* policy = simulation.stringToPolicy(selectionPolicy); 
@@ -56,7 +51,7 @@ void AddPlan::act(Simulation &simulation){
     }      
 };
 const string AddPlan::toString() const{
-    return "plan "+ settlementName +" "+ selectionPolicy +" ";
+    return "plan "+ settlementName +" "+ selectionPolicy +stringStatus;
 };
 AddPlan* AddPlan::clone()const{
     return new AddPlan(*this); 
@@ -77,7 +72,7 @@ void AddSettlement::act(Simulation &simulation){
 
 AddSettlement *AddSettlement::clone() const {return new AddSettlement(*this);};
 const string AddSettlement::toString() const {
-    return "settlement "+ settlementName+ " " +to_string(static_cast<int>(settlementType));
+    return "settlement "+ settlementName+ " " +to_string(static_cast<int>(settlementType)) +stringStatus;
 };
 
 //Implementing AddFacility Action class:
@@ -97,15 +92,26 @@ void AddFacility::act(Simulation &simulation){
 
 AddFacility *AddFacility::clone() const {return new AddFacility(*this);};
 const string AddFacility::toString() const {
-    return "facility";
+    return "facility "+ facilityName+" "+to_string(static_cast<int>(facilityCategory))+" "+
+    to_string(price)+" "+to_string(lifeQualityScore)+" "+to_string(economyScore)+" "+to_string(environmentScore)+stringStatus;
 };
 
 //Implementing PrintPlanStatus Action class:
 PrintPlanStatus::PrintPlanStatus(int planId):planId(planId){};
 void PrintPlanStatus::act(Simulation &simulation) {
+    if (!simulation.isPlanExist(planId)){
+        error("Plan doesn’t exist");
+    }
+    else{
+        Plan plan(simulation.getPlan(planId));
+        plan.printStatus();
+        complete();
+    }   
 };
-PrintPlanStatus *PrintPlanStatus::clone() const {};
-const string PrintPlanStatus::toString() const {};
+PrintPlanStatus *PrintPlanStatus::clone() const {return new PrintPlanStatus(*this);};
+const string PrintPlanStatus::toString() const {
+    return "planStatus "+ planId +stringStatus;
+};
     
 
 
