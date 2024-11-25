@@ -17,7 +17,8 @@ class BaseAction{
         virtual const string toString() const=0;
         virtual BaseAction* clone() const = 0;
         virtual ~BaseAction() = default;
-
+        const string statusToString();
+        
     protected:
         void complete();
         void error(string errorMsg);
