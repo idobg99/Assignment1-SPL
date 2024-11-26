@@ -106,7 +106,8 @@ const FacilityType& EconomySelection::selectFacility(const vector<FacilityType>&
 
 // ToString
 const string EconomySelection::toString() const {
-    return "Economy Selection Policy - index: " + std::to_string(lastSelectedIndex);
+    return "eco";
+    //return "Economy Selection Policy - index: " + std::to_string(lastSelectedIndex);
 };
 
 // Destructor

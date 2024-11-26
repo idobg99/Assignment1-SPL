@@ -1,6 +1,5 @@
 #include "Action.h"
 #include <iostream>
-#include <Facility.h>
 using namespace std;
 enum class SettlementType;
 enum class FacilityCategory;
@@ -59,10 +58,8 @@ AddPlan* AddPlan::clone()const{
 
 //Implementing AddSettlement Action class:
 AddSettlement::AddSettlement(const string &settlementName,SettlementType settlementType):settlementName(settlementName),settlementType(settlementType){}; 
-
 void AddSettlement::act(Simulation &simulation){
-    bool isNew = simulation.addSettlement(new Settlement(settlementName, settlementType));
-    if (!isNew){
+    if (simulation.isSettlementExists(settlementName)){
         error("Settlement already exists");
     }
     else {
@@ -70,7 +67,9 @@ void AddSettlement::act(Simulation &simulation){
     }
 };
 
-AddSettlement *AddSettlement::clone() const {return new AddSettlement(*this);};
+AddSettlement *AddSettlement::clone() const {
+    return new AddSettlement(*this);
+};
 const string AddSettlement::toString() const {
     return "settlement "+ settlementName+ " " +to_string(static_cast<int>(settlementType)) +stringStatus;
 };
@@ -89,7 +88,6 @@ void AddFacility::act(Simulation &simulation){
         complete();
     }    
 };
-
 AddFacility *AddFacility::clone() const {return new AddFacility(*this);};
 const string AddFacility::toString() const {
     return "facility "+ facilityName+" "+to_string(static_cast<int>(facilityCategory))+" "+
@@ -120,30 +118,28 @@ void ChangePlanPolicy::act(Simulation &simulation){
         error ("Cannot change selection policy");
     }
     else{
-        Plan planToChange = simulation.getPlan(planId);
-        if ("ddd"==newPolicy){
+        Plan plan = simulation.getPlan(planId);
+        if (newPolicy== plan.getSelectionPolicy()){  //to change in selectionPolicy class
             error ("Cannot change selection policy");
         }
         else{
-            string prevPolicy = planToChange.getSelectionPolicy(); 
+            string prevPolicy = plan.getSelectionPolicy(); 
             SelectionPolicy* newPol = simulation.stringToPolicy(newPolicy);
-            planToChange.setSelectionPolicy(newPol);
-            cout << "planID: " + to_string(planId)+ "\n"+
-                    "previousPolicy: " + prevPolicy +"\n"+
-                    "newPolicy: " +(*newPol).toString()+"\n";
+            plan.setSelectionPolicy(newPol);
+            cout << "planID: " + to_string(planId) <<endl;
+            cout << "previousPolicy: " + prevPolicy <<endl;
+            cout << "newPolicy: " +(*newPol).toString()<<endl;
             complete();
                 }            
-
             }          
         };
+
 ChangePlanPolicy *ChangePlanPolicy::clone() const {
     return new ChangePlanPolicy(*this); 
 };
-
 const string ChangePlanPolicy::toString() const {
-    
+    return "ChangePlanPolicy " + to_string(planId)+" "+ newPolicy; 
 };
-
 
 //Implementing PrintActionsLog Action class:
 PrintActionsLog::PrintActionsLog(){};
@@ -155,7 +151,6 @@ void PrintActionsLog::act(Simulation &simulation) {
 PrintActionsLog *PrintActionsLog::clone() const{
     return new PrintActionsLog(*this);
 };
-
 const string PrintActionsLog::toString() const {
     return "PrintActionsLog COMPLETED";
 };

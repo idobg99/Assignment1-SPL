@@ -1,4 +1,4 @@
-#include <Plan.h>
+#include "Plan.h"
 #include <iostream>
 using std::cout;
 using std::endl;
@@ -100,6 +100,6 @@ const string Plan::toString() const {
     return result;
 }
 
-const string &Plan::getSelectionPolicy(){
-    return selectionPolicy->toString();
+const string &Plan::getSelectionPolicy() const{
+    return selectionPolicy->toString();   //chnage it to the that are needed? like "bal", "env"
 };

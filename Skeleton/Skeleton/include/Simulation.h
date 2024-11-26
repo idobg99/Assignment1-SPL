@@ -27,6 +27,8 @@ class Simulation {
         void close();
         void open();
         SelectionPolicy* stringToPolicy (const string policy);
+        const string getAction(int actionNumber) const;
+        const int getNumOfActions() const; 
         
 
     private:

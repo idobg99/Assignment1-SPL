@@ -1,4 +1,4 @@
-#include "Simulation.h"
+#include <Simulation.h>
 #include <iostream>
 #include <fstream>
 #include <Auxiliary.h>
@@ -33,28 +33,36 @@ Simulation::Simulation(const string &configFilePath):isRunning(false), planCount
 };
 
 void Simulation::start(){
-    Simulation::open();
+    open();
 
     while (isRunning) {
         string userCommand;
         cin >> userCommand;
         vector<string> inf(Auxiliary::parseArguments(userCommand));
 
-        if (inf[0]=="step"){   //need to complete in action class.
-            SimulateStep* action = new SimulateStep(stoi(inf[1]));
-            addAction(action);
+        if (inf[0]=="step"){   //need to complete in action class.            
+            addAction(new SimulateStep(stoi(inf[1])));
         }
         else if (inf[0]=="plan"){           
             addAction(new AddPlan (inf[1], inf[2]));                   
         }
         else if (inf[0]=="settlement"){
-            SettlementType type = SettlementType(static_cast<SettlementType>((stoi(inf[2]))));            
-            addAction(new AddSettlement(inf[1],type));          
+            SettlementType type = SettlementType(static_cast<SettlementType>((stoi(inf[2])))); 
+            if (isSettlementExists(inf[1])){
+                addAction(new AddSettlement(inf[1],type));
+            }
+            else{
+                addSettlement(new Settlement(inf[1],type));
+                addAction(new AddSettlement(inf[1],type)); 
+            }                                            
         }
+        else if (inf[0]=="facility"){           
+            addAction(new AddFacility((inf[1]),static_cast<FacilityCategory>((stoi(inf[2]))),stoi(inf[3]),stoi(inf[4]),stoi(inf[5]),stoi(inf[6]))); 
+        }
+
         else if (inf[0]=="planStatus"){           
             addAction(new PrintPlanStatus(stoi(inf[1]))); 
         }
-
         else if (inf[0]=="log"){           
             addAction(new PrintActionsLog()); 
         }
@@ -64,7 +72,7 @@ void Simulation::start(){
 
         // Exit condition
         if (userCommand == "close") {           
-            Simulation::close();
+            close();
             break;
             }    
 }};
