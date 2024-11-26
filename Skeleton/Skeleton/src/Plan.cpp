@@ -99,3 +99,7 @@ const string Plan::toString() const {
 
     return result;
 }
+
+const string &Plan::getSelectionPolicy(){
+    return selectionPolicy->toString();
+};

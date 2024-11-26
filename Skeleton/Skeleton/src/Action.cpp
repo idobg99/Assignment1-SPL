@@ -7,7 +7,7 @@ enum class FacilityCategory;
 enum class ActionStatus;
 
 //Implementing BaseAction class:
-BaseAction::BaseAction() : errorMsg(""),status(), stringStatus(""){};
+BaseAction::BaseAction(){};  // : errorMsg(""),status(), stringStatus("")
 ActionStatus BaseAction::getStatus() const{
     return status;
 };
@@ -31,7 +31,7 @@ SimulateStep::SimulateStep(const int numOfSteps):numOfSteps(numOfSteps){};
 void SimulateStep::act(Simulation &simulation) {};  //to complete after the step methods.
 
 const string SimulateStep::toString() const {
-    return "SimulateStep " + to_string(numOfSteps)+stringStatus;
+    return "SimulateStep " + to_string(numOfSteps)+ " COMPLETED";
 };
 SimulateStep* SimulateStep::clone() const {
     return new SimulateStep(*this);
@@ -111,6 +111,53 @@ void PrintPlanStatus::act(Simulation &simulation) {
 PrintPlanStatus *PrintPlanStatus::clone() const {return new PrintPlanStatus(*this);};
 const string PrintPlanStatus::toString() const {
     return "planStatus "+ planId +stringStatus;
+};
+
+//Implementing ChangePlanPolicy Action class:
+ChangePlanPolicy::ChangePlanPolicy(const int planId, const string &newPolicy): planId(planId),newPolicy(newPolicy) {};
+void ChangePlanPolicy::act(Simulation &simulation){
+    if (!simulation.isPlanExist(planId)){
+        error ("Cannot change selection policy");
+    }
+    else{
+        Plan planToChange = simulation.getPlan(planId);
+        if ("ddd"==newPolicy){
+            error ("Cannot change selection policy");
+        }
+        else{
+            string prevPolicy = planToChange.getSelectionPolicy(); 
+            SelectionPolicy* newPol = simulation.stringToPolicy(newPolicy);
+            planToChange.setSelectionPolicy(newPol);
+            cout << "planID: " + to_string(planId)+ "\n"+
+                    "previousPolicy: " + prevPolicy +"\n"+
+                    "newPolicy: " +(*newPol).toString()+"\n";
+            complete();
+                }            
+
+            }          
+        };
+ChangePlanPolicy *ChangePlanPolicy::clone() const {
+    return new ChangePlanPolicy(*this); 
+};
+
+const string ChangePlanPolicy::toString() const {
+    
+};
+
+
+//Implementing PrintActionsLog Action class:
+PrintActionsLog::PrintActionsLog(){};
+void PrintActionsLog::act(Simulation &simulation) {
+    for (int i = 0;i<simulation.getNumOfActions();i++){
+        cout<< simulation.getAction(i) <<endl;
+    }
+};
+PrintActionsLog *PrintActionsLog::clone() const{
+    return new PrintActionsLog(*this);
+};
+
+const string PrintActionsLog::toString() const {
+    return "PrintActionsLog COMPLETED";
 };
     
 

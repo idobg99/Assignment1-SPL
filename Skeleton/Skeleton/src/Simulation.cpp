@@ -25,7 +25,7 @@ Simulation::Simulation(const string &configFilePath):isRunning(false), planCount
         else if (inf[0]=="plan"){
             SelectionPolicy* policy = stringToPolicy(inf[2]);
             if (policy!=nullptr) {           
-            addPlan(getSettlement(inf[1]),policy);
+                addPlan(getSettlement(inf[1]),policy);
             }                  
         }        
     }
@@ -54,6 +54,12 @@ void Simulation::start(){
         else if (inf[0]=="planStatus"){           
             addAction(new PrintPlanStatus(stoi(inf[1]))); 
         }
+
+        else if (inf[0]=="log"){           
+            addAction(new PrintActionsLog()); 
+        }
+
+        
         //to complete - executing the commands accordding to the user
 
         // Exit condition
@@ -131,8 +137,17 @@ SelectionPolicy* Simulation::stringToPolicy (const string policy){
     else if (policy=="env"){
         return new SustainabilitySelection();
     }
-    else return nullptr;
+    else return;
 };
+
+const string Simulation::getAction(int actionNumber) const{
+    BaseAction &actionToString = *actionsLog[actionNumber] ;
+    return (actionToString).toString(); 
+};
+
+const int Simulation::getNumOfActions() const{
+    return actionsLog.size();
+}; 
 
 
     
