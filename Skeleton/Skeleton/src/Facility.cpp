@@ -55,3 +55,7 @@ const string Facility::toString() const{
     return "facility " +name+ " "+ std::to_string(static_cast<int>(category))+" "+ std::to_string(price)+ " "+ 
     std::to_string(lifeQuality_score)+ " "+ std::to_string(economy_score)+ " "+ std::to_string(environment_score);      
 };
+
+void Facility::reduceTimeLeft() { // ido added
+    if (timeLeft > 0) {timeLeft = timeLeft - 1;}
+};

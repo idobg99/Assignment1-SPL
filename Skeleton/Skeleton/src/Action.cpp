@@ -6,7 +6,7 @@ enum class FacilityCategory;
 enum class ActionStatus;
 
 //Implementing BaseAction class:
-BaseAction::BaseAction(){};  // : errorMsg(""),status(), stringStatus("")
+BaseAction::BaseAction(){} : errorMsg(""),status(), stringStatus("")
 ActionStatus BaseAction::getStatus() const{
     return status;
 };
@@ -50,7 +50,7 @@ void AddPlan::act(Simulation &simulation){
     }      
 };
 const string AddPlan::toString() const{
-    return "plan "+ settlementName +" "+ selectionPolicy +stringStatus;
+    return "plan "+ settlementName +" "+ selectionPolicy + stringStatus;
 };
 AddPlan* AddPlan::clone()const{
     return new AddPlan(*this); 

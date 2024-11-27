@@ -12,7 +12,12 @@ Plan::Plan(const int planId, const Settlement &settlement, SelectionPolicy *sele
     status(PlanStatus::AVALIABLE),
     life_quality_score(0),
     economy_score(0),
-    environment_score(0) {};
+    environment_score(0) {
+        if (settlement.getType() == SettlementType::CITY) {constructionLimit = 2;} // settelment is a city
+        else if (settlement.getType() == SettlementType::METROPOLIS) {constructionLimit = 3;} // settelment is a metropolis
+        else {constructionLimit = 1;} // settelment is a village
+        
+    };
 
 
 
@@ -42,23 +47,6 @@ void Plan::setSelectionPolicy(SelectionPolicy *newSelectionPolicy) {
 // Print Status
 void Plan::printStatus() {
     cout << "Plan Status: " << (status == PlanStatus::AVALIABLE ? "AVALIABLE" : "BUSY") << endl;
-
-    ///////////////// if we need to print the entire status of the plan (dont think so)////////////////////////
-    //cout << "Plan ID: " << plan_id << endl;
-    //cout << "Settlement: " << settlement.getName() << endl;
-    //cout << "Life Quality Score: " << life_quality_score << endl;
-    //cout << "Economy Score: " << economy_score << endl;
-    //cout << "Environment Score: " << environment_score << endl;
-    //cout << "Facilities: " << endl;
-
-    //for (auto facility : facilities) {
-    //    cout << " - " << facility->toString() << " (Operational)" << endl;
-    //}
-
-    //cout << "Under Construction: " << endl;
-    //for (auto facility : underConstruction) {
-    //    cout << " - " << facility->toString() << " (Time Left: " << facility->getTimeLeft() << ")" << endl;
-    //}
 }
 
 // Get all facilities
@@ -100,6 +88,39 @@ const string Plan::toString() const {
     return result;
 }
 
-const string &Plan::getSelectionPolicy() const{
+const string &Plan::getSelectionPolicy() const {
     return selectionPolicy->toString();   //chnage it to the that are needed? like "bal", "env"
+};
+
+void Plan::step() {
+
+    // Plan is available
+    if (status == PlanStatus::AVALIABLE) {
+        // step 2 - by playbook
+        while(underConstruction.size() < constructionLimit) {
+            const FacilityType& ft = selectionPolicy->selectFacility(facilityOptions);
+            Facility* newFacility = new Facility(const_cast<FacilityType&>(ft), settlement.getName());
+            underConstruction.push_back(newFacility);
+        }
+    }
+
+    // step 3 - by playbook
+    int fac_index = 0;
+    for (Facility* f : underConstruction) {
+        FacilityStatus fs = f->step();
+
+        if (fs == FacilityStatus::OPERATIONAL) {
+            underConstruction.erase(underConstruction.begin() + fac_index); // Remove from underConstruction
+            facilities.push_back(f); // Add to facilities
+            fac_index--; // CHECK FOR CORRECTNESS OF DELETEION AND MULTIPLE DELETIONS!!!!!!!!
+        }
+
+        fac_index++;
+    }
+
+    // step 4 - by playbook
+    // Changed the status based on the number of facilities under construction
+    if (underConstruction.size() == constructionLimit) {status = PlanStatus::BUSY;}
+    else {status = PlanStatus::AVALIABLE;}
+    
 };
