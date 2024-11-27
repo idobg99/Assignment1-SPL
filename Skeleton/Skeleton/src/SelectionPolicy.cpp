@@ -19,10 +19,7 @@ const FacilityType& NaiveSelection::selectFacility(const vector<FacilityType>& f
 
 // ToString
 const string NaiveSelection::toString() const {
-    if (lastSelectedIndex == -1) { 
-        return "Naive Selection Policy - not selected";  // Indicates no selection has been made
-    }
-    return "Naive Selection Policy - index: " + std::to_string(lastSelectedIndex);
+    return "nve";
 }
 
 // Creates deep copy
@@ -30,8 +27,7 @@ NaiveSelection* NaiveSelection::clone() const {
     return new NaiveSelection(*this);
 }
 
-// Destructor
-NaiveSelection::~NaiveSelection() {};
+
 
 
 // BalancedSelection Constructor 
@@ -69,18 +65,16 @@ const FacilityType& BalancedSelection::selectFacility(const vector<FacilityType>
 
 // Provides a string representation of the current scores for debugging or logging
 const string BalancedSelection::toString() const {
-    return "Balanced Selection Policy: Life Quality-" + std::to_string(LifeQualityScore) + " , EconomyScore-" 
-                                                      + std::to_string(EconomyScore) + " , EnvironmentScore-"
-                                                      + std::to_string(EnvironmentScore);
+    return "bal";
+    // return "Balanced Selection Policy: Life Quality-" + std::to_string(LifeQualityScore) + " , EconomyScore-" 
+    //                                                   + std::to_string(EconomyScore) + " , EnvironmentScore-"
+    //                                                   + std::to_string(EnvironmentScore);
 };
 
 // Creates a copy of the current object
 BalancedSelection* BalancedSelection::clone() const {
     return new BalancedSelection(*this);
 };
-
-// Destructor
-BalancedSelection::~BalancedSelection() {};
 
 
 // EconomySelection Constructor 
@@ -110,8 +104,6 @@ const string EconomySelection::toString() const {
     //return "Economy Selection Policy - index: " + std::to_string(lastSelectedIndex);
 };
 
-// Destructor
-EconomySelection::~EconomySelection() {};
 
 // Creates a deep copy
 EconomySelection* EconomySelection::clone() const {
@@ -142,11 +134,10 @@ const FacilityType& SustainabilitySelection::selectFacility(const vector<Facilit
 
 // ToString
 const string SustainabilitySelection::toString() const {
-    return "Sustainability Selection Policy - index: " + std::to_string(lastSelectedIndex);
+    return "env";
+    // return "Sustainability Selection Policy - index: " + std::to_string(lastSelectedIndex);
 };
 
-// Destructor
-SustainabilitySelection::~SustainabilitySelection() {};
 
 // Creates deep copy
 SustainabilitySelection* SustainabilitySelection::clone() const {

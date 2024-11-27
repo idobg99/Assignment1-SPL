@@ -101,7 +101,7 @@ void PrintPlanStatus::act(Simulation &simulation) {
         error("Plan doesn’t exist");
     }
     else{
-        Plan plan(simulation.getPlan(planId));
+        Plan plan = simulation.getPlan(planId);
         plan.printStatus();
         complete();
     }   
