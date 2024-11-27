@@ -35,7 +35,7 @@ void Simulation::start(){
 
     while (isRunning) {
         string userCommand;
-        cin >> userCommand;
+        getline(cin, userCommand);
         vector<string> inf(Auxiliary::parseArguments(userCommand));
 
         if (inf[0]=="step"&&inf.size() == 2){   //need to complete in action class.            
