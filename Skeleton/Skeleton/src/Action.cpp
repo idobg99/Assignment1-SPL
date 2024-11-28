@@ -1,12 +1,13 @@
-#include "Action.h"
+#include "/workspaces/Assignment1-SPL/Skeleton/Skeleton/include/Action.h"
+#include "/workspaces/Assignment1-SPL/Skeleton/Skeleton/include/globals.h"
 #include <iostream>
 using namespace std;
 enum class SettlementType;
 enum class FacilityCategory;
 enum class ActionStatus;
 
-//Implementing BaseAction class:
-BaseAction::BaseAction(){} : errorMsg(""),status(), stringStatus("")
+// Implementing BaseAction class:
+BaseAction::BaseAction(){}; //: errorMsg(""),status(), stringStatus("")
 ActionStatus BaseAction::getStatus() const{
     return status;
 };
@@ -25,7 +26,7 @@ const string &BaseAction::getErrorMsg() const{
     return errorMsg;
 };
 
-//Implementing SimulateStep Action class:
+// Implementing SimulateStep Action class:
 SimulateStep::SimulateStep(const int numOfSteps):numOfSteps(numOfSteps){};
 void SimulateStep::act(Simulation &simulation) {};  //to complete after the step methods.
 
@@ -36,7 +37,7 @@ SimulateStep* SimulateStep::clone() const {
     return new SimulateStep(*this);
 };
 
-//Implementing AddPlan Action class:
+// Implementing AddPlan Action class:
 AddPlan::AddPlan(const string &settlementName, const string &selectionPolicy):settlementName(settlementName),selectionPolicy(selectionPolicy){};
 void AddPlan::act(Simulation &simulation){
     Settlement* settlement = simulation.getSettlement(settlementName); 
@@ -56,7 +57,7 @@ AddPlan* AddPlan::clone()const{
     return new AddPlan(*this); 
 };
 
-//Implementing AddSettlement Action class:
+// Implementing AddSettlement Action class:
 AddSettlement::AddSettlement(const string &settlementName,SettlementType settlementType):settlementName(settlementName),settlementType(settlementType){}; 
 void AddSettlement::act(Simulation &simulation){
     if (simulation.isSettlementExists(settlementName)){
@@ -74,7 +75,7 @@ const string AddSettlement::toString() const {
     return "settlement "+ settlementName+ " " +to_string(static_cast<int>(settlementType)) +stringStatus;
 };
 
-//Implementing AddFacility Action class:
+// Implementing AddFacility Action class:
 AddFacility::AddFacility(const string &facilityName, const FacilityCategory facilityCategory, const int price, const int lifeQualityScore, const int economyScore, const int environmentScore):
 facilityName(facilityName),facilityCategory(facilityCategory),price(price),lifeQualityScore(lifeQualityScore),economyScore(economyScore),environmentScore(environmentScore){};
 
@@ -94,7 +95,7 @@ const string AddFacility::toString() const {
     to_string(price)+" "+to_string(lifeQualityScore)+" "+to_string(economyScore)+" "+to_string(environmentScore)+stringStatus;
 };
 
-//Implementing PrintPlanStatus Action class:
+// Implementing PrintPlanStatus Action class:
 PrintPlanStatus::PrintPlanStatus(int planId):planId(planId){};
 void PrintPlanStatus::act(Simulation &simulation) {
     if (!simulation.isPlanExist(planId)){
@@ -111,7 +112,7 @@ const string PrintPlanStatus::toString() const {
     return "planStatus "+ planId +stringStatus;
 };
 
-//Implementing ChangePlanPolicy Action class:
+// Implementing ChangePlanPolicy Action class:
 ChangePlanPolicy::ChangePlanPolicy(const int planId, const string &newPolicy): planId(planId),newPolicy(newPolicy) {};
 void ChangePlanPolicy::act(Simulation &simulation){
     if (!simulation.isPlanExist(planId)){
@@ -141,7 +142,7 @@ const string ChangePlanPolicy::toString() const {
     return "ChangePlanPolicy " + to_string(planId)+" "+ newPolicy; 
 };
 
-//Implementing PrintActionsLog Action class:
+// Implementing PrintActionsLog Action class:
 PrintActionsLog::PrintActionsLog(){};
 void PrintActionsLog::act(Simulation &simulation) {
     for (int i = 0;i<simulation.getNumOfActions();i++){
@@ -155,6 +156,16 @@ const string PrintActionsLog::toString() const {
     return "PrintActionsLog COMPLETED";
 };
     
+// Implementing BackupSimulation Action class:
+BackupSimulation::BackupSimulation(){};
+
+// Backup the simulation
+// deleting the previos backup
+// deep copying the current simulation to the backup global variable
+void BackupSimulation::act(Simulation &simulation) {
+    delete backup;
+    backup = new Simulation(simulation);
+};
 
 
 

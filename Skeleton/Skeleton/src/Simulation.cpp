@@ -7,6 +7,7 @@
  #include "Plan.h"
  #include "SelectionPolicy.h"
  #include "Action.h"
+ #include "globals.h"
  using namespace std;
 
 Simulation::Simulation(const string &configFilePath):isRunning(false), planCounter(0), 
@@ -38,7 +39,7 @@ void Simulation::start(){
         getline(cin, userCommand);
         vector<string> inf(Auxiliary::parseArguments(userCommand));
 
-        if (inf[0]=="step"&&inf.size() == 2){   //need to complete in action class.            
+        if (inf[0]=="step"&&inf.size() == 2){             
             addAction(new SimulateStep(stoi(inf[1])));
         }
         else if (inf[0]=="plan"&&inf.size() == 3){           
@@ -63,6 +64,9 @@ void Simulation::start(){
         }
         else if (inf[0]=="log"&&inf.size() == 1){           
             addAction(new PrintActionsLog()); 
+        }
+        else if (inf[0]=="backup"&&inf.size() == 1){           
+            addAction(new BackupSimulation()); 
         }
         
         
@@ -95,7 +99,7 @@ bool Simulation::addSettlement(Settlement *settlement){
 
 bool Simulation::addFacility(FacilityType facility){
     for (FacilityType f: facilitiesOptions){
-        if (f.getName()==facility.getName()) {return false;}
+        if (f.getName()==facility.getName()) {return false;}  // CHECK VALIDITY OF == OPERATOR FOR NAME STRING
     }
     facilitiesOptions.push_back(facility);
     return true;
@@ -126,7 +130,13 @@ Plan &Simulation::getPlan(const int planID){
     return plans[planID];
 };
 
-void Simulation::step(){};// to complete
+void Simulation::step(){
+    // Iterate over all palns
+    for (Plan p : plans) {
+        p.step();
+    }
+};
+
 void Simulation::close(){
     isRunning = false;
 };
@@ -162,6 +172,8 @@ const int Simulation::getNumOfActions() const{
     return actionsLog.size();
 }; 
 
+
+
 //Disctructor for Simulation:
 Simulation::~Simulation(){
     for(BaseAction* a: actionsLog){
@@ -172,20 +184,42 @@ Simulation::~Simulation(){
     }
 };
 
-// Copy costructor:
-Simulation::Simulation(Simulation &other){
+/*// Copy costructor:
+Simulation::Simulation(Simulation &other){  
     for (Settlement* s: other.settlements){
         addSettlement(new Settlement(*s));
     }
     for (BaseAction* a:other.actionsLog){
-        addAction((*a).clone());
+        addAction(a->clone());
     }
     for (Plan p: other.plans){
         Plan newP = Plan(p);
         plans.push_back(newP);
         planCounter++;
     }
-};      
+};      */
+
+
+Simulation::Simulation(Simulation &other) : 
+    isRunning(other.isRunning),
+    planCounter(other.planCounter),
+    facilitiesOptions(other.facilitiesOptions) {
+
+    // Deep copy settlements
+    for (Settlement* settlement : other.settlements) {
+        settlements.push_back(new Settlement(*settlement));
+    }
+
+    // Deep copy plans
+    for (const Plan& plan : other.plans) {
+        plans.push_back(plan); // ASSIMING PLAN HAS A DEEP COPY CONSTRUCTOR - IMPLEMENT!!!
+    }
+
+    // Deep copy actions log
+    for (BaseAction* action : other.actionsLog) {
+        actionsLog.push_back(action->clone()); // Assuming BaseAction has a virtual clone method
+    }
+};
 
     
 

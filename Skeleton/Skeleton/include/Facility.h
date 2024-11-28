@@ -48,6 +48,9 @@ class Facility: public FacilityType {
         const FacilityStatus& getStatus() const;
         const string toString() const;
 
+        // Ido added
+        void reduceTimeLeft();
+
     private:
         const string settlementName;
         FacilityStatus status;

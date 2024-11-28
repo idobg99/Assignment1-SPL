@@ -13,10 +13,10 @@ Plan::Plan(const int planId, const Settlement &settlement, SelectionPolicy *sele
     life_quality_score(0),
     economy_score(0),
     environment_score(0) {
-        if (settlement.getType() == SettlementType::CITY) {constructionLimit = 2;} // settelment is a city
-        else if (settlement.getType() == SettlementType::METROPOLIS) {constructionLimit = 3;} // settelment is a metropolis
-        else {constructionLimit = 1;} // settelment is a village
-        
+
+        constructionLimit = (settlement.getType() == SettlementType::CITY) ? 2 :
+                            (settlement.getType() == SettlementType::METROPOLIS) ? 3 :
+                            1;
     };
 
 

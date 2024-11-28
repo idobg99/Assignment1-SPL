@@ -1,4 +1,5 @@
 #include "Simulation.h"
+#include "globals.h"
 #include <iostream>
 #include <string>
 using namespace std;
