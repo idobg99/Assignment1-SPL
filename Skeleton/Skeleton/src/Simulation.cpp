@@ -47,11 +47,11 @@ void Simulation::start(){
         }
         else if (inf[0]=="settlement"&&inf.size() == 3){
             SettlementType type = SettlementType(static_cast<SettlementType>((stoi(inf[2])))); 
-            if (isSettlementExists(inf[1])){
+            if (!isSettlementExists(inf[1])){
+                addSettlement(new Settlement(inf[1],type));
                 addAction(new AddSettlement(inf[1],type));
             }
-            else{
-                addSettlement(new Settlement(inf[1],type));
+            else{               
                 addAction(new AddSettlement(inf[1],type)); 
             }                                            
         }
@@ -62,6 +62,10 @@ void Simulation::start(){
         else if (inf[0]=="planStatus"&&inf.size() == 2){           
             addAction(new PrintPlanStatus(stoi(inf[1]))); 
         }
+         else if (inf[0]=="changePolicy"&&inf.size() == 3){           
+            addAction(new ChangePlanPolicy(stoi(inf[1]), inf[2])); 
+        }
+        
         else if (inf[0]=="log"&&inf.size() == 1){           
             addAction(new PrintActionsLog()); 
         }
@@ -92,7 +96,7 @@ void Simulation::addAction(BaseAction *action){
 };
 
 bool Simulation::addSettlement(Settlement *settlement){
-    if (Simulation::isSettlementExists((*settlement).getName())) {return false;}
+    //if (Simulation::isSettlementExists((*settlement).getName())) {return false;}
     settlements.push_back(settlement);
     return true;
 };
@@ -107,7 +111,9 @@ bool Simulation::addFacility(FacilityType facility){
 
 bool Simulation::isSettlementExists(const string &settlementName){
     for (Settlement *s:settlements){
-        if ((*s).getName()==settlementName) {return true;}
+        if ((s->getName())==settlementName) {
+            return true;
+        }
     }
     return false;
 };

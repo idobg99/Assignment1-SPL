@@ -67,7 +67,8 @@ const string Plan::toString() const {
     result += "Plan Status: ";
     if (status == PlanStatus::AVALIABLE) {
         result += "AVALIABLE\n";
-    } else {
+    } 
+    else {
         result += "BUSY\n";
     }
 

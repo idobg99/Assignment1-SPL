@@ -1,5 +1,5 @@
-#include "/workspaces/Assignment1-SPL/Skeleton/Skeleton/include/Action.h"
-#include "/workspaces/Assignment1-SPL/Skeleton/Skeleton/include/globals.h"
+#include "Action.h"
+#include "globals.h"
 #include <iostream>
 using namespace std;
 enum class SettlementType;
@@ -103,13 +103,13 @@ void PrintPlanStatus::act(Simulation &simulation) {
     }
     else{
         Plan plan = simulation.getPlan(planId);
-        plan.printStatus();
+        cout << plan.toString() << endl;
         complete();
     }   
 };
 PrintPlanStatus *PrintPlanStatus::clone() const {return new PrintPlanStatus(*this);};
 const string PrintPlanStatus::toString() const {
-    return "planStatus "+ planId +stringStatus;
+    return "planStatus "+ to_string(planId) +stringStatus;
 };
 
 // Implementing ChangePlanPolicy Action class:
@@ -165,6 +165,14 @@ BackupSimulation::BackupSimulation(){};
 void BackupSimulation::act(Simulation &simulation) {
     delete backup;
     backup = new Simulation(simulation);
+    complete();
+};
+
+BackupSimulation *BackupSimulation::clone() const {
+    return new BackupSimulation(*this);
+};
+const string BackupSimulation::toString() const {
+    return "BackUpSimulation "+ stringStatus;
 };
 
 
