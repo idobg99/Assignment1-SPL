@@ -1,5 +1,5 @@
-#include "Action.h"
-#include "globals.h"
+#include "/workspaces/Assignment1-SPL/Skeleton/Skeleton/include/Action.h"
+#include "/workspaces/Assignment1-SPL/Skeleton/Skeleton/include/globals.h"
 #include <iostream>
 using namespace std;
 enum class SettlementType;
@@ -44,9 +44,9 @@ void AddPlan::act(Simulation &simulation){
     SelectionPolicy* policy = simulation.stringToPolicy(selectionPolicy); 
     simulation.addPlan(settlement, policy);
     if (!(simulation.isSettlementExists(settlementName))|policy==nullptr){
-                error("Cannot create this plan");
-        } 
-    else{
+        error("Cannot create this plan");
+    } 
+    else {
         complete();        
     }      
 };
@@ -166,6 +166,18 @@ void BackupSimulation::act(Simulation &simulation) {
     delete backup;
     backup = new Simulation(simulation);
     complete();
+};
+
+// Implementing RestoreSimulation Action calss:
+RestoreSimulation::RestoreSimulation() {};
+
+void RestoreSimulation::act(Simulation &simulation) {
+    if (backup == nullptr) {
+        error("no backup available");
+    }
+    else {
+         // Assign backup to simulation
+    }
 };
 
 BackupSimulation *BackupSimulation::clone() const {

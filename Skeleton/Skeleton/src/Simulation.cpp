@@ -39,13 +39,13 @@ void Simulation::start(){
         getline(cin, userCommand);
         vector<string> inf(Auxiliary::parseArguments(userCommand));
 
-        if (inf[0]=="step"&&inf.size() == 2){             
+        if (inf[0]=="step"&&inf.size() == 2) {             
             addAction(new SimulateStep(stoi(inf[1])));
         }
-        else if (inf[0]=="plan"&&inf.size() == 3){           
+        else if (inf[0]=="plan"&&inf.size() == 3) {           
             addAction(new AddPlan (inf[1], inf[2]));                   
         }
-        else if (inf[0]=="settlement"&&inf.size() == 3){
+        else if (inf[0]=="settlement"&&inf.size() == 3) {
             SettlementType type = SettlementType(static_cast<SettlementType>((stoi(inf[2])))); 
             if (!isSettlementExists(inf[1])){
                 addSettlement(new Settlement(inf[1],type));
@@ -55,22 +55,27 @@ void Simulation::start(){
                 addAction(new AddSettlement(inf[1],type)); 
             }                                            
         }
-        else if (inf[0]=="facility"&&inf.size() == 7){           
+        else if (inf[0]=="facility"&&inf.size() == 7) {           
             addAction(new AddFacility((inf[1]),static_cast<FacilityCategory>((stoi(inf[2]))),stoi(inf[3]),stoi(inf[4]),stoi(inf[5]),stoi(inf[6]))); 
         }
 
-        else if (inf[0]=="planStatus"&&inf.size() == 2){           
+        else if (inf[0]=="planStatus"&&inf.size() == 2) {           
             addAction(new PrintPlanStatus(stoi(inf[1]))); 
         }
-         else if (inf[0]=="changePolicy"&&inf.size() == 3){           
+         else if (inf[0]=="changePolicy"&&inf.size() == 3) {           
             addAction(new ChangePlanPolicy(stoi(inf[1]), inf[2])); 
         }
         
-        else if (inf[0]=="log"&&inf.size() == 1){           
+        else if (inf[0]=="log"&&inf.size() == 1 ){           
             addAction(new PrintActionsLog()); 
         }
-        else if (inf[0]=="backup"&&inf.size() == 1){           
+        else if (inf[0]=="backup"&&inf.size() == 1) {           
             addAction(new BackupSimulation()); 
+        }
+        else if (inf[0]=="restore"&&inf.size() == 1) {
+            if (backup == nullptr) {
+                cout << "no backup available"
+            }
         }
         
         
