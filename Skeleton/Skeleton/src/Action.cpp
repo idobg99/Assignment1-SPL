@@ -1,5 +1,5 @@
-#include "/workspaces/Assignment1-SPL/Skeleton/Skeleton/include/Action.h"
-#include "/workspaces/Assignment1-SPL/Skeleton/Skeleton/include/globals.h"
+#include "Action.h" //"/workspaces/Assignment1-SPL/Skeleton/Skeleton/include/Action.h"
+#include "globals.h" //"/workspaces/Assignment1-SPL/Skeleton/Skeleton/include/globals.h"
 #include <iostream>
 using namespace std;
 enum class SettlementType;
@@ -7,7 +7,7 @@ enum class FacilityCategory;
 enum class ActionStatus;
 
 // Implementing BaseAction class:
-BaseAction::BaseAction(){}; //: errorMsg(""),status(), stringStatus("")
+BaseAction::BaseAction() : errorMsg(""),status(), stringStatus(""){};
 ActionStatus BaseAction::getStatus() const{
     return status;
 };
@@ -39,14 +39,16 @@ SimulateStep* SimulateStep::clone() const {
 
 // Implementing AddPlan Action class:
 AddPlan::AddPlan(const string &settlementName, const string &selectionPolicy):settlementName(settlementName),selectionPolicy(selectionPolicy){};
+
 void AddPlan::act(Simulation &simulation){
     Settlement* settlement = simulation.getSettlement(settlementName); 
-    SelectionPolicy* policy = simulation.stringToPolicy(selectionPolicy); 
-    simulation.addPlan(settlement, policy);
-    if (!(simulation.isSettlementExists(settlementName))|policy==nullptr){
-        error("Cannot create this plan");
+    SelectionPolicy* policy = simulation.stringToPolicy(selectionPolicy);        
+    if (!(simulation.isSettlementExists(settlementName))||settlement==nullptr||policy==nullptr){
+        //simulation.addPlan(nullptr, nullptr);
+        error("Cannot create this plan");       
     } 
     else {
+        simulation.addPlan(settlement, policy);
         complete();        
     }      
 };
@@ -179,12 +181,34 @@ void RestoreSimulation::act(Simulation &simulation) {
          // Assign backup to simulation
     }
 };
+RestoreSimulation *RestoreSimulation::clone() const{
+    return new RestoreSimulation(*this);
+};
+const string RestoreSimulation::toString() const {
+    return "RestoreSimulation:" + stringStatus;
+};
 
 BackupSimulation *BackupSimulation::clone() const {
     return new BackupSimulation(*this);
 };
 const string BackupSimulation::toString() const {
     return "BackUpSimulation "+ stringStatus;
+};
+
+// Implementing Close Action calss:
+Close:: Close(){};
+void Close::act(Simulation &simulation) {
+    for (int i =0; i< simulation.getNumOfPlans();i++ ){
+        Plan p(simulation.getPlan(i));
+        cout << p.toString() << endl;
+    }
+    complete();    
+};
+Close *Close::clone() const {
+    return new Close(*this);
+};
+const string Close::toString() const {
+    return "Close: COMPLETED";
 };
 
 

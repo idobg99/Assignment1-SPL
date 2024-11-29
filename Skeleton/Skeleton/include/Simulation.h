@@ -25,12 +25,16 @@ class Simulation {
         Plan &getPlan(const int planID);       
         void step();
         void close();
-        void open();
+        void open();       
+        ~Simulation(); 
+        Simulation(Simulation &other);
+
+        //Adi added:
         SelectionPolicy* stringToPolicy (const string &policy);
         const string getAction(int actionNumber) const;
         const int getNumOfActions() const;
-        ~Simulation(); 
-        Simulation(Simulation &other);
+        const int getNumOfPlans() const;
+
         
 
     private:

@@ -46,15 +46,14 @@ void Simulation::start(){
             addAction(new AddPlan (inf[1], inf[2]));                   
         }
         else if (inf[0]=="settlement"&&inf.size() == 3) {
-            SettlementType type = SettlementType(static_cast<SettlementType>((stoi(inf[2])))); 
+            SettlementType type = SettlementType(static_cast<SettlementType>((stoi(inf[2]))));
+            addAction(new AddSettlement(inf[1],type)); 
             if (!isSettlementExists(inf[1])){
                 addSettlement(new Settlement(inf[1],type));
-                addAction(new AddSettlement(inf[1],type));
-            }
-            else{               
-                addAction(new AddSettlement(inf[1],type)); 
-            }                                            
-        }
+            }   
+             
+        }                                            
+        
         else if (inf[0]=="facility"&&inf.size() == 7) {           
             addAction(new AddFacility((inf[1]),static_cast<FacilityCategory>((stoi(inf[2]))),stoi(inf[3]),stoi(inf[4]),stoi(inf[5]),stoi(inf[6]))); 
         }
@@ -65,7 +64,7 @@ void Simulation::start(){
          else if (inf[0]=="changePolicy"&&inf.size() == 3) {           
             addAction(new ChangePlanPolicy(stoi(inf[1]), inf[2])); 
         }
-        
+
         else if (inf[0]=="log"&&inf.size() == 1 ){           
             addAction(new PrintActionsLog()); 
         }
@@ -74,18 +73,15 @@ void Simulation::start(){
         }
         else if (inf[0]=="restore"&&inf.size() == 1) {
             if (backup == nullptr) {
-                cout << "no backup available"
+                cout << "no backup available";
             }
         }
-        
-        
-        //to complete - executing the commands accordding to the user
-
         // Exit condition
-        if (userCommand == "close") {           
+        else if (inf[0]=="close"&&inf.size() == 1) {
+            addAction(new Close()); 
             close();
-            break;
-        }    
+            break;        
+        }                                   
     }
 };
 
@@ -101,7 +97,7 @@ void Simulation::addAction(BaseAction *action){
 };
 
 bool Simulation::addSettlement(Settlement *settlement){
-    //if (Simulation::isSettlementExists((*settlement).getName())) {return false;}
+    if (Simulation::isSettlementExists((*settlement).getName())) {return false;}
     settlements.push_back(settlement);
     return true;
 };
@@ -150,6 +146,7 @@ void Simulation::step(){
 
 void Simulation::close(){
     isRunning = false;
+    cout << "The simulation has finished with success"<< endl;
 };
 void Simulation::open(){
     isRunning = true;
@@ -169,7 +166,6 @@ SelectionPolicy* Simulation::stringToPolicy (const string &policy){
     else if (policy=="env"){
         return new SustainabilitySelection();
     }
-    //SelectionPolicy* a = new NaiveSelection();
     return nullptr;
 };
 
@@ -183,6 +179,9 @@ const int Simulation::getNumOfActions() const{
     return actionsLog.size();
 }; 
 
+const int Simulation::getNumOfPlans() const{
+    return plans.size();
+}; 
 
 
 //Disctructor for Simulation:
