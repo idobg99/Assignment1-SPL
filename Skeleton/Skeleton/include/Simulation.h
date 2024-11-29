@@ -35,6 +35,9 @@ class Simulation {
         const int getNumOfActions() const;
         const int getNumOfPlans() const;
 
+        //Ido added
+        Simulation& operator=(const Simulation& other);
+
         
 
     private:

@@ -1,5 +1,7 @@
-#include "Action.h" //"/workspaces/Assignment1-SPL/Skeleton/Skeleton/include/Action.h"
-#include "globals.h" //"/workspaces/Assignment1-SPL/Skeleton/Skeleton/include/globals.h"
+//#include "Action.h" 
+//#include "globals.h" 
+#include "/workspaces/Assignment1-SPL/Skeleton/Skeleton/include/globals.h"
+#include "/workspaces/Assignment1-SPL/Skeleton/Skeleton/include/Action.h"
 #include <iostream>
 using namespace std;
 enum class SettlementType;
@@ -118,12 +120,12 @@ const string PrintPlanStatus::toString() const {
 ChangePlanPolicy::ChangePlanPolicy(const int planId, const string &newPolicy): planId(planId),newPolicy(newPolicy) {};
 void ChangePlanPolicy::act(Simulation &simulation){
     if (!simulation.isPlanExist(planId)){
-        error ("Cannot change selection policy");
+        error("Cannot change selection policy");
     }
     else{
         Plan plan = simulation.getPlan(planId);
         if (newPolicy== plan.getSelectionPolicy()){  //to change in selectionPolicy class
-            error ("Cannot change selection policy");
+            error("Cannot change selection policy");
         }
         else{
             string prevPolicy = plan.getSelectionPolicy(); 
@@ -170,6 +172,14 @@ void BackupSimulation::act(Simulation &simulation) {
     complete();
 };
 
+BackupSimulation *BackupSimulation::clone() const {
+    return new BackupSimulation(*this);
+};
+
+const string BackupSimulation::toString() const {
+    return "BackUpSimulation "+ stringStatus;
+};
+
 // Implementing RestoreSimulation Action calss:
 RestoreSimulation::RestoreSimulation() {};
 
@@ -178,7 +188,7 @@ void RestoreSimulation::act(Simulation &simulation) {
         error("no backup available");
     }
     else {
-         // Assign backup to simulation
+        simulation = *backup;
     }
 };
 RestoreSimulation *RestoreSimulation::clone() const{
@@ -186,13 +196,6 @@ RestoreSimulation *RestoreSimulation::clone() const{
 };
 const string RestoreSimulation::toString() const {
     return "RestoreSimulation:" + stringStatus;
-};
-
-BackupSimulation *BackupSimulation::clone() const {
-    return new BackupSimulation(*this);
-};
-const string BackupSimulation::toString() const {
-    return "BackUpSimulation "+ stringStatus;
 };
 
 // Implementing Close Action calss:

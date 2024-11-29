@@ -39,45 +39,39 @@ void Simulation::start(){
         getline(cin, userCommand);
         vector<string> inf(Auxiliary::parseArguments(userCommand));
 
-        if (inf[0]=="step"&&inf.size() == 2) {             
+        if (inf[0] == "step" && inf.size() == 2) {             
             addAction(new SimulateStep(stoi(inf[1])));
         }
-        else if (inf[0]=="plan"&&inf.size() == 3) {           
-            addAction(new AddPlan (inf[1], inf[2]));                   
+        else if (inf[0] == "plan" && inf.size() == 3) {           
+            addAction(new AddPlan(inf[1], inf[2]));                   
         }
-        else if (inf[0]=="settlement"&&inf.size() == 3) {
+        else if (inf[0] == "settlement" && inf.size() == 3) {
             SettlementType type = SettlementType(static_cast<SettlementType>((stoi(inf[2]))));
             addAction(new AddSettlement(inf[1],type)); 
             if (!isSettlementExists(inf[1])){
                 addSettlement(new Settlement(inf[1],type));
             }   
-             
         }                                            
-        
-        else if (inf[0]=="facility"&&inf.size() == 7) {           
+        else if (inf[0] == "facility" && inf.size() == 7) {           
             addAction(new AddFacility((inf[1]),static_cast<FacilityCategory>((stoi(inf[2]))),stoi(inf[3]),stoi(inf[4]),stoi(inf[5]),stoi(inf[6]))); 
         }
-
-        else if (inf[0]=="planStatus"&&inf.size() == 2) {           
+        else if (inf[0] == "planStatus" && inf.size() == 2) {           
             addAction(new PrintPlanStatus(stoi(inf[1]))); 
         }
-         else if (inf[0]=="changePolicy"&&inf.size() == 3) {           
+         else if (inf[0] == "changePolicy" && inf.size() == 3) {           
             addAction(new ChangePlanPolicy(stoi(inf[1]), inf[2])); 
         }
-
-        else if (inf[0]=="log"&&inf.size() == 1 ){           
+        else if (inf[0] == "log" && inf.size() == 1 ){           
             addAction(new PrintActionsLog()); 
         }
-        else if (inf[0]=="backup"&&inf.size() == 1) {           
+        else if (inf[0] == "backup" && inf.size() == 1) {           
             addAction(new BackupSimulation()); 
         }
-        else if (inf[0]=="restore"&&inf.size() == 1) {
-            if (backup == nullptr) {
-                cout << "no backup available";
-            }
+        else if (inf[0] == "restore" && inf.size() == 1) {
+            addAction(new RestoreSimulation());
         }
         // Exit condition
-        else if (inf[0]=="close"&&inf.size() == 1) {
+        else if (inf[0] == "close" && inf.size() == 1) {
             addAction(new Close()); 
             close();
             break;        
@@ -230,6 +224,45 @@ Simulation::Simulation(Simulation &other) :
         actionsLog.push_back(action->clone()); // Assuming BaseAction has a virtual clone method
     }
 };
+
+Simulation& Simulation::operator=(const Simulation& other) {
+    if (this != &other) {  // Avoid self-assignment
+        // Clean up existing resources
+        for (Settlement* settlement : settlements) {
+            delete settlement;
+        }
+        settlements.clear();
+
+        for (BaseAction* action : actionsLog) {
+            delete action;
+        }
+        actionsLog.clear();
+
+        // Copy primitive and directly copyable members
+        isRunning = other.isRunning;
+        planCounter = other.planCounter;
+        facilitiesOptions = other.facilitiesOptions;
+
+        // Deep copy settlements
+        for (Settlement* settlement : other.settlements) {
+            settlements.push_back(new Settlement(*settlement));
+        }
+
+        // Deep copy plans
+        plans.clear();
+        for (const Plan& plan : other.plans) {
+            plans.push_back(plan);  // Assuming Plan has a deep copy constructor
+        }
+
+        // Deep copy actions log
+        for (BaseAction* action : other.actionsLog) {
+            actionsLog.push_back(action->clone());  // Assuming BaseAction has a clone method
+        }
+    }
+
+    return *this;
+}
+
 
     
 
