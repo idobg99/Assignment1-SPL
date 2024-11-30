@@ -54,15 +54,10 @@ FacilityStatus Facility::step() {
         timeLeft--;
     }
 
-    cout << "PLAN STEP TEST - CHECK STATUS" << endl; ///////////////////////////////////////////
-
     if (timeLeft == 0){
-        cout << "PLAN STEP TEST - STATUS IS OPERATIONAL" << endl;
         setStatus(FacilityStatus::OPERATIONAL);
     }
-    
-    cout << "PLAN STEP TEST - this is the status" << endl;
-    cout << StatustoString(Facility::getStatus()) << endl;
+
     return Facility::getStatus();
 };
 void Facility::setStatus(FacilityStatus status){
