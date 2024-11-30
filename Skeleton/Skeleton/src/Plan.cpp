@@ -93,7 +93,14 @@ const string Plan::toString() const {
 }
 
 const string &Plan::getSelectionPolicy() const {
-    return selectionPolicy->toString();   //chnage it to the that are needed? like "bal", "env"
+    static const string nve = "nve";
+    static const string bal = "bal";
+    static const string env = "env";
+    static const string eco = "eco";
+
+    return (selectionPolicy->toString() == "nve") ? nve : 
+           (selectionPolicy->toString() == "bal") ? bal :
+           (selectionPolicy->toString() == "env") ? env : eco;
 };
 
 void Plan::step() {

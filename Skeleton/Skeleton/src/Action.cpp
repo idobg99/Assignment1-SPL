@@ -128,6 +128,7 @@ void ChangePlanPolicy::act(Simulation &simulation){
     }
     else{
         Plan& plan = simulation.getPlan(planId);
+
         if (newPolicy == plan.getSelectionPolicy()){  //to change in selectionPolicy class
             error("Cannot change selection policy");
         }
@@ -135,6 +136,9 @@ void ChangePlanPolicy::act(Simulation &simulation){
             string prevPolicy = plan.getSelectionPolicy(); 
             SelectionPolicy* newPol = simulation.stringToPolicy(newPolicy);
             plan.setSelectionPolicy(newPol);
+
+            cout << plan.toString() << endl;
+
             cout << "planID: " + to_string(planId) <<endl;
             cout << "previousPolicy: " + prevPolicy <<endl;
             cout << "newPolicy: " +(*newPol).toString()<<endl;

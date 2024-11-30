@@ -5,7 +5,12 @@ change the tostring of plan as per the playbook
 
 ***ignore # at config file***
 
-***problem in facility selection in plan.step - finished consttuction and continue to select the facility even though this is already built. ***
+***problem in facility selection in plan.step - finished constuction and continue to select the facility even though this is already built. ***
+ -- maybe add check for if in facilities - if is in there dont add it and continue - problem - can enter infinite loop if no facilities to choose
+
+
+implement rule of 5 to everyone that needs
+
 
 
 
@@ -29,5 +34,7 @@ addfacility - seems to be working
 addSettlement - seems to be working
 addplan - seems to be working
 naiveselection - working
+
+**did not checked edge cases**
 
 

@@ -26,7 +26,7 @@ class Simulation {
         void step();
         void close();
         void open();       
-        ~Simulation(); 
+        ~Simulation();
         Simulation(Simulation &other);
 
         //Adi added:
@@ -37,8 +37,6 @@ class Simulation {
 
         //Ido added
         Simulation& operator=(const Simulation& other);
-
-        
 
     private:
         bool isRunning;

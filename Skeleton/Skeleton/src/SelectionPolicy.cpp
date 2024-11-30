@@ -66,9 +66,6 @@ const FacilityType& BalancedSelection::selectFacility(const vector<FacilityType>
 // Provides a string representation of the current scores for debugging or logging
 const string BalancedSelection::toString() const {
     return "bal";
-    // return "Balanced Selection Policy: Life Quality-" + std::to_string(LifeQualityScore) + " , EconomyScore-" 
-    //                                                   + std::to_string(EconomyScore) + " , EnvironmentScore-"
-    //                                                   + std::to_string(EnvironmentScore);
 };
 
 // Creates a copy of the current object
@@ -101,7 +98,6 @@ const FacilityType& EconomySelection::selectFacility(const vector<FacilityType>&
 // ToString
 const string EconomySelection::toString() const {
     return "eco";
-    //return "Economy Selection Policy - index: " + std::to_string(lastSelectedIndex);
 };
 
 
@@ -135,7 +131,6 @@ const FacilityType& SustainabilitySelection::selectFacility(const vector<Facilit
 // ToString
 const string SustainabilitySelection::toString() const {
     return "env";
-    // return "Sustainability Selection Policy - index: " + std::to_string(lastSelectedIndex);
 };
 
 
