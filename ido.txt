@@ -1,0 +1,29 @@
+
+how do i know the plan id for the printplanstatus? - UI problem (need to print all plans or print the id for the created plan)
+
+change the tostring of plan as per the playbook
+
+
+
+***problem in facility selection in plan.step - finished consttuction and continue to select the facility even though this is already built. ***
+
+facility idobank 1 3 3 2 1
+facility idofact 0 2 2 1 1
+facility idogarden 2 5 2 2 3
+settlement idocity 1
+plan idocity nve
+
+
+
+
+
+
+check:
+backup - seems to be working
+restore - seems to be working
+step - seems to be working 
+	*problem in facility selection
+addfacility - seems to be working
+addSettlement - seems to be working
+addplan - seems to be working
+

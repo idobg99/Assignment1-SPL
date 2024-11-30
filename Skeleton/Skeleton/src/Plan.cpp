@@ -1,5 +1,6 @@
 #include "Plan.h"
 #include <iostream>
+#include <algorithm>
 using std::cout;
 using std::endl;
 
@@ -17,7 +18,7 @@ Plan::Plan(const int planId, const Settlement &settlement, SelectionPolicy *sele
         constructionLimit = (settlement.getType() == SettlementType::CITY) ? 2 :
                             (settlement.getType() == SettlementType::METROPOLIS) ? 3 :
                             1;
-    };
+};
 
 
 
@@ -82,6 +83,8 @@ const string Plan::toString() const {
     }
 
     result += "Under Construction:\n";
+
+
     for (auto facility : underConstruction) {
         result += " - " + facility->toString() + " (Time Left: " + std::to_string(facility->getTimeLeft()) + ")\n";
     }
@@ -99,6 +102,7 @@ void Plan::step() {
     if (status == PlanStatus::AVALIABLE) {
         // step 2 - by playbook
         while(underConstruction.size() < constructionLimit) {
+            
             const FacilityType& ft = selectionPolicy->selectFacility(facilityOptions);
             Facility* newFacility = new Facility(const_cast<FacilityType&>(ft), settlement.getName());
             underConstruction.push_back(newFacility);
@@ -106,8 +110,9 @@ void Plan::step() {
     }
 
     // step 3 - by playbook
-    int fac_index = 0;
-    for (Facility* f : underConstruction) {
+
+    /*int fac_index = 0; //////////////////////////////////////////////////////////////////////////////////
+    for (Facility* f : underConstruction) { // check if i need to 
         FacilityStatus fs = f->step();
 
         if (fs == FacilityStatus::OPERATIONAL) {
@@ -117,11 +122,30 @@ void Plan::step() {
         }
 
         fac_index++;
-    }
+    }*/
+
+    auto it = std::remove_if(
+    underConstruction.begin(),
+    underConstruction.end(),
+    [this](Facility* f) {
+        cout << "testo" << endl;
+        if (f->step() == FacilityStatus::OPERATIONAL) {
+            facilities.push_back(f); 
+            cout << "test idodo" << endl;
+            return true; // Mark for removal from underConstruction
+            }
+            return false; // Keep in underConstruction
+        }
+    );
+    cout << this->toString() << endl;
+    underConstruction.erase(it, underConstruction.end());
 
     // step 4 - by playbook
     // Changed the status based on the number of facilities under construction
     if (underConstruction.size() == constructionLimit) {status = PlanStatus::BUSY;}
     else {status = PlanStatus::AVALIABLE;}
-    
+};
+
+const int Plan::getPlanId() const{
+    return plan_id;
 };

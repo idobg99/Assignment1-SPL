@@ -39,6 +39,11 @@ void Simulation::start(){
         getline(cin, userCommand);
         vector<string> inf(Auxiliary::parseArguments(userCommand));
 
+        if (inf.empty()) {
+            cout << "No such command." << endl;
+            continue;
+        }
+
         if (inf[0] == "step" && inf.size() == 2) {             
             addAction(new SimulateStep(stoi(inf[1])));
         }
@@ -75,7 +80,10 @@ void Simulation::start(){
             addAction(new Close()); 
             close();
             break;        
-        }                                   
+        }
+        else {
+            cout << "No such command." << endl;
+        }                             
     }
 };
 
@@ -87,7 +95,7 @@ void Simulation::addPlan(const Settlement *settlement, SelectionPolicy *selectio
 
 void Simulation::addAction(BaseAction *action){
     actionsLog.push_back(action);
-    (*action).act(*this);    
+    (*action).act(*this);
 };
 
 bool Simulation::addSettlement(Settlement *settlement){
@@ -128,12 +136,17 @@ bool Simulation::isPlanExist(const int planId){
 };
 
 Plan &Simulation::getPlan(const int planID){   
-    return plans[planID];
+    
+    for (Plan& plan : plans) {  // Iterate over all plans
+        if (plan.getPlanId() == planID) { 
+            return plan;
+        }
+    }
 };
 
 void Simulation::step(){
     // Iterate over all palns
-    for (Plan p : plans) {
+    for (Plan& p : plans) {
         p.step();
     }
 };
@@ -241,7 +254,7 @@ Simulation& Simulation::operator=(const Simulation& other) {
         // Copy primitive and directly copyable members
         isRunning = other.isRunning;
         planCounter = other.planCounter;
-        facilitiesOptions = other.facilitiesOptions;
+        facilitiesOptions = std::vector<FacilityType>(other.facilitiesOptions);
 
         // Deep copy settlements
         for (Settlement* settlement : other.settlements) {

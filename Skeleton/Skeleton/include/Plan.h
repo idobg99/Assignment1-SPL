@@ -24,6 +24,9 @@ class Plan {
         const string toString() const;
         const string &getSelectionPolicy() const;
 
+        // Ido added
+         const int getPlanId() const;
+
     private:
         int plan_id;
         Settlement &settlement;

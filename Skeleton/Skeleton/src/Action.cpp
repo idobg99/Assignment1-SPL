@@ -1,7 +1,7 @@
-//#include "Action.h" 
-//#include "globals.h" 
-#include "/workspaces/Assignment1-SPL/Skeleton/Skeleton/include/globals.h"
-#include "/workspaces/Assignment1-SPL/Skeleton/Skeleton/include/Action.h"
+#include "Action.h" 
+#include "globals.h" 
+//#include "/workspaces/Assignment1-SPL/Skeleton/Skeleton/include/globals.h"
+//#include "/workspaces/Assignment1-SPL/Skeleton/Skeleton/include/Action.h"
 #include <iostream>
 using namespace std;
 enum class SettlementType;
@@ -29,8 +29,12 @@ const string &BaseAction::getErrorMsg() const{
 };
 
 // Implementing SimulateStep Action class:
-SimulateStep::SimulateStep(const int numOfSteps):numOfSteps(numOfSteps){};
-void SimulateStep::act(Simulation &simulation) {};  //to complete after the step methods.
+SimulateStep::SimulateStep(const int numOfSteps): numOfSteps(numOfSteps){};
+void SimulateStep::act(Simulation &simulation) {
+    for (int i = 0; i < numOfSteps; ++i) {
+        simulation.step();
+    }
+}; 
 
 const string SimulateStep::toString() const {
     return "SimulateStep " + to_string(numOfSteps)+ " COMPLETED";
@@ -100,16 +104,16 @@ const string AddFacility::toString() const {
 };
 
 // Implementing PrintPlanStatus Action class:
-PrintPlanStatus::PrintPlanStatus(int planId):planId(planId){};
+PrintPlanStatus::PrintPlanStatus(int planId): planId(planId){};
 void PrintPlanStatus::act(Simulation &simulation) {
     if (!simulation.isPlanExist(planId)){
         error("Plan doesn’t exist");
     }
     else{
-        Plan plan = simulation.getPlan(planId);
+        Plan& plan = simulation.getPlan(planId);
         cout << plan.toString() << endl;
         complete();
-    }   
+    }
 };
 PrintPlanStatus *PrintPlanStatus::clone() const {return new PrintPlanStatus(*this);};
 const string PrintPlanStatus::toString() const {
@@ -149,7 +153,7 @@ const string ChangePlanPolicy::toString() const {
 // Implementing PrintActionsLog Action class:
 PrintActionsLog::PrintActionsLog(){};
 void PrintActionsLog::act(Simulation &simulation) {
-    for (int i = 0;i<simulation.getNumOfActions();i++){
+    for (int i = 0;i<simulation.getNumOfActions() - 1;i++){
         cout<< simulation.getAction(i) <<endl;
     }
 };
