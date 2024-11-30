@@ -165,7 +165,7 @@ SelectionPolicy* Simulation::stringToPolicy (const string &policy){
         return new NaiveSelection();
     }
     else if (policy=="bal"){
-        return new BalancedSelection(0,0,0);  //need to check if it is the right input
+        return new BalancedSelection(0,0,0);  //check if is the right input - edit: is the right one
     }
     else if (policy=="eco"){
         return new EconomySelection();

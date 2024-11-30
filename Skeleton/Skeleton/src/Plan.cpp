@@ -102,7 +102,6 @@ void Plan::step() {
     if (status == PlanStatus::AVALIABLE) {
         // step 2 - by playbook
         while(underConstruction.size() < constructionLimit) {
-            
             const FacilityType& ft = selectionPolicy->selectFacility(facilityOptions);
             Facility* newFacility = new Facility(const_cast<FacilityType&>(ft), settlement.getName());
             underConstruction.push_back(newFacility);
@@ -110,28 +109,15 @@ void Plan::step() {
     }
 
     // step 3 - by playbook
-
-    /*int fac_index = 0; //////////////////////////////////////////////////////////////////////////////////
-    for (Facility* f : underConstruction) { // check if i need to 
-        FacilityStatus fs = f->step();
-
-        if (fs == FacilityStatus::OPERATIONAL) {
-            underConstruction.erase(underConstruction.begin() + fac_index); // Remove from underConstruction
-            facilities.push_back(f); // Add to facilities
-            fac_index--; // CHECK FOR CORRECTNESS OF DELETEION AND MULTIPLE DELETIONS!!!!!!!!
-        }
-
-        fac_index++;
-    }*/
-
     auto it = std::remove_if(
     underConstruction.begin(),
     underConstruction.end(),
     [this](Facility* f) {
-        cout << "testo" << endl;
         if (f->step() == FacilityStatus::OPERATIONAL) {
+            this->life_quality_score = this->life_quality_score + f->getLifeQualityScore();
+            this->economy_score = this->economy_score + f->getEconomyScore();
+            this->environment_score = this->environment_score + f->getEnvironmentScore();
             facilities.push_back(f); 
-            cout << "test idodo" << endl;
             return true; // Mark for removal from underConstruction
             }
             return false; // Keep in underConstruction
