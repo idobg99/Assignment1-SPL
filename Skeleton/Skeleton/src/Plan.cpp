@@ -9,11 +9,14 @@ Plan::Plan(const int planId, const Settlement &settlement, SelectionPolicy *sele
     plan_id(planId),
     settlement(const_cast<Settlement &>(settlement)), // Remove constness of settlement reference
     selectionPolicy(selectionPolicy),
-    facilityOptions(facilityOptions),
     status(PlanStatus::AVALIABLE),
+    facilities(),
+    underConstruction(),
+    facilityOptions(facilityOptions),
     life_quality_score(0),
     economy_score(0),
-    environment_score(0) {
+    environment_score(0),
+    constructionLimit() {
 
         constructionLimit = (settlement.getType() == SettlementType::CITY) ? 2 :
                             (settlement.getType() == SettlementType::METROPOLIS) ? 3 :
@@ -130,7 +133,6 @@ void Plan::step() {
             return false; // Keep in underConstruction
         }
     );
-    cout << this->toString() << endl;
     underConstruction.erase(it, underConstruction.end());
 
     // step 4 - by playbook
@@ -142,3 +144,136 @@ void Plan::step() {
 const int Plan::getPlanId() const{
     return plan_id;
 };
+
+// Rule of 5
+
+// Destructor
+Plan::~Plan() {
+    delete selectionPolicy; // Free the dynamically allocated selectionPolicy
+
+    // Free the facilities and underConstruction pointers
+    for (Facility* facility : facilities) {
+        delete facility;
+    }
+    for (Facility* facility : underConstruction) {
+        delete facility;
+    }
+}
+
+// Copy constructor
+Plan::Plan(const Plan &other) 
+    : plan_id(other.plan_id),
+      settlement(other.settlement), 
+      selectionPolicy(other.selectionPolicy->clone()), 
+      status(other.status),
+      facilities(),
+      underConstruction(),
+      facilityOptions(other.facilityOptions), 
+      life_quality_score(other.life_quality_score),
+      economy_score(other.economy_score),
+      environment_score(other.environment_score),
+      constructionLimit(other.constructionLimit) {
+
+    // Deep copy the facilities vector
+    for (Facility* facility : other.facilities) {
+        facilities.push_back(new Facility(*facility));
+    }
+
+    // Deep copy the underConstruction vector
+    for (Facility* facility : other.underConstruction) {
+        underConstruction.push_back(new Facility(*facility));
+    }
+}
+
+/*// Copy assignment operator 
+Plan& Plan::operator=(const Plan &other) {
+    if (this != &other) { // Avoid self-assignment
+        // Clean up existing resources
+        delete selectionPolicy;
+        for (Facility* facility : facilities) {
+            delete facility;
+        }
+        facilities.clear();
+
+        for (Facility* facility : underConstruction) {
+            delete facility;
+        }
+        underConstruction.clear();
+
+        // Copy primitive and directly copyable members
+        plan_id = other.plan_id;
+        settlement = other.settlement; // Reference remains the same
+        selectionPolicy = other.selectionPolicy->clone(); // Clone the selectionPolicy
+        status = other.status;
+        facilityOptions = other.facilityOptions; // Reference remains the same
+        life_quality_score = other.life_quality_score;
+        economy_score = other.economy_score;
+        environment_score = other.environment_score;
+        constructionLimit = other.constructionLimit;
+
+        // Deep copy the facilities vector
+        for (Facility* facility : other.facilities) {
+            facilities.push_back(new Facility(*facility));
+        }
+
+        // Deep copy the underConstruction vector
+        for (Facility* facility : other.underConstruction) {
+            underConstruction.push_back(new Facility(*facility));
+        }
+    }
+    return *this;
+}*/
+
+// Move constructor 
+Plan::Plan(Plan &&other) noexcept 
+    : plan_id(other.plan_id),
+      settlement(other.settlement),
+      selectionPolicy(other.selectionPolicy),
+      status(other.status),
+      facilities(std::move(other.facilities)),
+      underConstruction(std::move(other.underConstruction)),
+      facilityOptions(other.facilityOptions),
+      life_quality_score(other.life_quality_score),
+      economy_score(other.economy_score),
+      environment_score(other.environment_score),
+      constructionLimit(other.constructionLimit)
+       {
+
+    other.selectionPolicy = nullptr; // Nullify the source pointer to avoid double deletion
+}
+
+/*//Move assignment operator
+Plan& Plan::operator=(Plan &&other) noexcept {
+    if (this != &other) { // Avoid self-assignment
+        // Clean up existing resources
+        delete selectionPolicy;
+        for (Facility* facility : facilities) {
+            delete facility;
+        }
+        facilities.clear();
+
+        for (Facility* facility : underConstruction) {
+            delete facility;
+        }
+        underConstruction.clear();
+
+        // Transfer ownership of resources
+        plan_id = other.plan_id;
+        settlement = other.settlement;
+        selectionPolicy = other.selectionPolicy;
+        status = other.status;
+        facilityOptions = other.facilityOptions;
+        life_quality_score = other.life_quality_score;
+        economy_score = other.economy_score;
+        environment_score = other.environment_score;
+        constructionLimit = other.constructionLimit;
+        facilities = std::move(other.facilities);
+        underConstruction = std::move(other.underConstruction);
+
+        // Nullify the source pointer to avoid double deletion
+        other.selectionPolicy = nullptr;
+    }
+    return *this;
+}*/
+
+

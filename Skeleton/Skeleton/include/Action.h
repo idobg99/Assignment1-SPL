@@ -22,7 +22,7 @@ class BaseAction{
         void complete();
         void error(string errorMsg);
         const string &getErrorMsg() const;
-
+        
         //Adi added:
         string stringStatus;
 

@@ -129,19 +129,19 @@ Settlement* Simulation::getSettlement(const string &settlementName){
 };
 
 bool Simulation::isPlanExist(const int planId){
-    if (planId >= plans.size()){
+    if (planId < 0 || static_cast<std::size_t>(planId) >= plans.size()) {
          return false;
     }
     return true;
 };
 
 Plan &Simulation::getPlan(const int planID){   
-    
     for (Plan& plan : plans) {  // Iterate over all plans
         if (plan.getPlanId() == planID) { 
             return plan;
         }
     }
+    throw std::out_of_range("No plan found with this ID.");
 };
 
 void Simulation::step(){
@@ -220,6 +220,9 @@ Simulation::Simulation(Simulation &other){
 Simulation::Simulation(Simulation &other) : 
     isRunning(other.isRunning),
     planCounter(other.planCounter),
+    actionsLog(),
+    plans(),
+    settlements(),
     facilitiesOptions(other.facilitiesOptions) {
 
     // Deep copy settlements

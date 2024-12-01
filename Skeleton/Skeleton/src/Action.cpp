@@ -9,7 +9,7 @@ enum class FacilityCategory;
 enum class ActionStatus;
 
 // Implementing BaseAction class:
-BaseAction::BaseAction() : errorMsg(""),status(), stringStatus(""){};
+BaseAction::BaseAction() : stringStatus(""), errorMsg(""), status(){}
 ActionStatus BaseAction::getStatus() const{
     return status;
 };

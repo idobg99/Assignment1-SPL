@@ -25,7 +25,12 @@ class Plan {
         const string &getSelectionPolicy() const;
 
         // Ido added
-         const int getPlanId() const;
+        const int getPlanId() const;
+        ~Plan();
+        Plan(const Plan &other); // Copy constructor
+        Plan& operator=(const Plan &other); // Copy assignment operator
+        Plan(Plan &&other) noexcept; // Move constructor
+        Plan& operator=(Plan &&other) noexcept; // Move assignment operator
 
     private:
         int plan_id;
