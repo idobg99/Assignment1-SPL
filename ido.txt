@@ -1,40 +1,44 @@
 
-how do i know the plan id for the printplanstatus? - UI problem (need to print all plans or print the id for the created plan)
+how do i know the plan id for the printPlanStatus? - UI problem (need to print all plans or print the id for the created plan)
 
-change the tostring of plan as per the playbook
+change the toString of plan as per the instructions
 
 ***ignore # at config file***
 
-***problem in facility selection in plan.step - finished constuction and continue to select the facility even though this is already built. ***
- -- maybe add check for if in facilities - if is in there dont add it and continue - problem - can enter infinite loop if no facilities to choose
-
+***potential problem in facility selection in plan.step - finished construction and continue to select the facility even though this is already built. ***
+ -- maybe add check for if in facilities - if is in there don't add it and continue - problem - can enter infinite loop if no facilities to choose
 
 implement rule of 5 to everyone that needs
 
 
 
+#CHECKED:#
+backup -           working - check for correct deep copying 
+restore -          working
+step -             working 
+	            *problem in facility selection as mentioned earlier*
+addfacility -      working
+addSettlement -    working
+addplan -          working
+naiveselection -   working
+ChangePlanPolicy - Working (checked only change to nve)
 
+**DID NOT CHECKED FOR EDGE CASES**
+
+#NEED TO CHECK:#
+other selection policies
+close
+
+edge cases check needed:
+parsing config, other parsing
+adding facilities and settlements - adding existing objects
+plan threading - plans for the same settlement - what happens simultaneously
+
+
+##IGNORE##
 facility idobank 1 3 3 2 1
 facility idofact 0 2 2 1 1
 facility idogarden 2 5 2 2 3
 settlement idocity 1
 plan idocity nve
-
-
-
-
-
-
-check:
-backup - seems to be working
-restore - seems to be working
-step - seems to be working 
-	*problem in facility selection
-addfacility - seems to be working
-addSettlement - seems to be working
-addplan - seems to be working
-naiveselection - working
-
-**did not checked edge cases**
-
 
