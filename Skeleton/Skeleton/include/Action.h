@@ -16,20 +16,22 @@ class BaseAction{
         virtual void act(Simulation& simulation)=0;
         virtual const string toString() const=0;
         virtual BaseAction* clone() const = 0;
-        virtual ~BaseAction() = default;
+        virtual ~BaseAction() = default;       
 
     protected:
         void complete();
         void error(string errorMsg);
         const string &getErrorMsg() const;
+        
+        //Adi added:
+        string stringStatus;
 
     private:
         string errorMsg;
-        ActionStatus status;
+        ActionStatus status;        
 };
 
 class SimulateStep : public BaseAction {
-
     public:
         SimulateStep(const int numOfSteps);
         void act(Simulation &simulation) override;
@@ -61,7 +63,6 @@ class AddSettlement : public BaseAction {
         const string settlementName;
         const SettlementType settlementType;
 };
-
 
 
 class AddFacility : public BaseAction {

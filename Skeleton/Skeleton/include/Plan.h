@@ -22,6 +22,15 @@ class Plan {
         const vector<Facility*> &getFacilities() const;
         void addFacility(Facility* facility);
         const string toString() const;
+        const string &getSelectionPolicy() const;
+
+        // Ido added
+        const int getPlanId() const;
+        ~Plan();
+        Plan(const Plan &other); // Copy constructor
+        Plan& operator=(const Plan &other); // Copy assignment operator
+        Plan(Plan &&other) noexcept; // Move constructor
+        Plan& operator=(Plan &&other) noexcept; // Move assignment operator
 
     private:
         int plan_id;
@@ -32,4 +41,7 @@ class Plan {
         vector<Facility*> underConstruction;
         const vector<FacilityType> &facilityOptions;
         int life_quality_score, economy_score, environment_score;
+
+        // Ido added
+        std::size_t constructionLimit;
 };
