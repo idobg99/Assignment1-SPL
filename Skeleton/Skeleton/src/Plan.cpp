@@ -259,10 +259,10 @@ Plan& Plan::operator=(Plan &&other) noexcept {
 
         // Transfer ownership of resources
         plan_id = other.plan_id;
-        settlement = other.settlement;
+        //settlement = other.settlement;
         selectionPolicy = other.selectionPolicy;
         status = other.status;
-        facilityOptions = other.facilityOptions;
+        //facilityOptions = other.facilityOptions;
         life_quality_score = other.life_quality_score;
         economy_score = other.economy_score;
         environment_score = other.environment_score;
