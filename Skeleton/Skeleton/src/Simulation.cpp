@@ -18,15 +18,15 @@ Simulation::Simulation(const string &configFilePath):isRunning(false), planCount
      while (getline(configFile, line)){       
          vector<string> inf(Auxiliary::parseArguments(line));
          if (inf[0]=="settlement"&&inf.size() == 3){            
-             addSettlement(new Settlement(inf[1],SettlementType(static_cast<SettlementType>((stoi(inf[2])))) ));
+             addSettlement(new Settlement(inf[1],SettlementType(static_cast<SettlementType>((stoi(inf[2]))))));
          }
          else if (inf[0]=="facility"&&inf.size()==7){
              addFacility(FacilityType(inf[1],static_cast<FacilityCategory>((stoi(inf[2]))),stoi(inf[3]),stoi(inf[4]), stoi(inf[5]), stoi(inf[6])));
          }
          else if (inf[0]=="plan"&&inf.size()==3){
-             SelectionPolicy* policy = stringToPolicy(inf[2]);          
-             addPlan(getSettlement(inf[1]),policy);                                         
-         }       
+             SelectionPolicy* policy = stringToPolicy(inf[2]);
+             addPlan(getSettlement(inf[1]),policy);                            
+         }
      }
      configFile.close();
 };

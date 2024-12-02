@@ -2,6 +2,9 @@
 #include <stdexcept>   // For exceptions
 #include <limits>      // For numeric limits
 #include <algorithm>   // For std::max and std::min
+#include <iostream>
+using std::cout;
+using std::endl;
 
 // NaiveSelection Constructor 
 NaiveSelection::NaiveSelection():lastSelectedIndex(-1) {};
@@ -40,6 +43,7 @@ BalancedSelection::BalancedSelection(int LifeQualityScore, int EconomyScore, int
 const FacilityType& BalancedSelection::selectFacility(const vector<FacilityType>& facilitiesOptions) {
 
     int minDistance = std::numeric_limits<int>::max();  // Initialize minimum distance to a large value
+    //const FacilityType selectedFacility; 
     const FacilityType* selectedFacility = nullptr;     // Pointer to track the best facility
 
     for (const FacilityType& facility : facilitiesOptions) {
@@ -59,6 +63,11 @@ const FacilityType& BalancedSelection::selectFacility(const vector<FacilityType>
             selectedFacility = &facility;
         }
     }
+
+    FacilityType& mutableSelectedFacility = const_cast<FacilityType&>(*selectedFacility);
+    LifeQualityScore += mutableSelectedFacility.getLifeQualityScore();
+    EconomyScore += mutableSelectedFacility.getEconomyScore();
+    EnvironmentScore += mutableSelectedFacility.getEnvironmentScore();
 
     return *selectedFacility;
 };
@@ -89,8 +98,8 @@ const FacilityType& EconomySelection::selectFacility(const vector<FacilityType>&
             return facility;
         }
 
-        i = (i + 1) % facilitiesOptions.size();  // Move to the next index.
-    } while (i != startIndex);  // Loop back to the starting point.
+        i = (i + 1) % facilitiesOptions.size(); 
+    } while (i != startIndex);  
 
     throw std::runtime_error("No economy facility found");  // Exception if no suitable facility is found.
 };
