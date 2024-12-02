@@ -16,14 +16,15 @@ Simulation::Simulation(const string &configFilePath):isRunning(false), planCount
      string line;
 
      while (getline(configFile, line)){       
-         vector<string> inf(Auxiliary::parseArguments(line));
-         if (inf[0]=="settlement"&&inf.size() == 3){            
+        vector<string> inf(Auxiliary::parseArguments(line));
+
+        if (inf.size() == 3 && inf[0]=="settlement"){            
              addSettlement(new Settlement(inf[1],SettlementType(static_cast<SettlementType>((stoi(inf[2])))) ));
          }
-         else if (inf[0]=="facility"&&inf.size()==7){
+        else if (inf.size()==7 && inf[0]=="facility"){
              addFacility(FacilityType(inf[1],static_cast<FacilityCategory>((stoi(inf[2]))),stoi(inf[3]),stoi(inf[4]), stoi(inf[5]), stoi(inf[6])));
          }
-         else if (inf[0]=="plan"&&inf.size()==3){
+        else if (inf.size()==3 && inf[0]=="plan"){
              SelectionPolicy* policy = stringToPolicy(inf[2]);          
              addPlan(getSettlement(inf[1]),policy);                                         
          }       
@@ -44,7 +45,7 @@ void Simulation::start(){
             continue;
         }
 
-        if (inf[0] == "step" && inf.size() == 2) {             
+        else if (inf[0] == "step" && inf.size() == 2) {             
             addAction(new SimulateStep(stoi(inf[1])));
         }
         else if (inf[0] == "plan" && inf.size() == 3) {           
@@ -201,21 +202,6 @@ Simulation::~Simulation(){
     }
 };
 
-/*// Copy costructor:
-Simulation::Simulation(Simulation &other){  
-    for (Settlement* s: other.settlements){
-        addSettlement(new Settlement(*s));
-    }
-    for (BaseAction* a:other.actionsLog){
-        addAction(a->clone());
-    }
-    for (Plan p: other.plans){
-        Plan newP = Plan(p);
-        plans.push_back(newP);
-        planCounter++;
-    }
-};      */
-
 
 Simulation::Simulation(Simulation &other) : 
     isRunning(other.isRunning),
@@ -275,7 +261,44 @@ Simulation& Simulation::operator=(const Simulation& other) {
             actionsLog.push_back(action->clone());  // Assuming BaseAction has a clone method
         }
     }
+    return *this;
+}
 
+Simulation& Simulation::operator=(const Simulation&& other){
+    if (this != &other) {  // Avoid self-assignment
+        // Clean up existing resources
+        plans.clear();
+        for (Settlement* settlement : settlements) {
+            delete settlement;
+        }
+        settlements.clear();
+
+        for (BaseAction* action : actionsLog) {
+            delete action;
+        }
+        actionsLog.clear();
+
+        // Copy primitive and directly copyable members
+        isRunning = other.isRunning;
+        planCounter = other.planCounter;
+        facilitiesOptions = std::vector<FacilityType>(other.facilitiesOptions);
+        //facilitiesOptions = std::move(other.facilitiesOptions);   //check what to do because the FaciltyType are const
+
+        // Deep copy plans        
+        for (const Plan& plan : other.plans) {
+            plans.push_back(plan);  // Assuming Plan has a deep copy constructor
+        }
+
+        // Deep copy settlements
+        for (Settlement* settlement : other.settlements) {
+            settlements.push_back(settlement);
+        }
+        
+        // Deep copy actions log
+        for (BaseAction* action : other.actionsLog) {
+            actionsLog.push_back(action);  
+        }
+    }
     return *this;
 }
 
@@ -286,5 +309,6 @@ Simulation::Simulation(Simulation &&other):
     plans(std::move(other.plans)),
     settlements(std::move(other.settlements)),
     facilitiesOptions(other.facilitiesOptions) {};
+
 
     

@@ -35,6 +35,7 @@ class Simulation {
         const int getNumOfActions() const;
         const int getNumOfPlans() const;
         Simulation(Simulation &&other);
+        Simulation& operator=(const Simulation&& other);
 
 
         //Ido added:
@@ -47,5 +48,4 @@ class Simulation {
         vector<Plan> plans;
         vector<Settlement*> settlements;
         vector<FacilityType> facilitiesOptions;
-
 };
