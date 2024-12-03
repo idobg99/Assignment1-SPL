@@ -202,10 +202,10 @@ Plan& Plan::operator=(const Plan &other) {
 
         // Copy primitive and directly copyable members
         plan_id = other.plan_id;
-        settlement = other.settlement; // Reference remains the same
+        //settlement = other.settlement; // Reference remains the same
         selectionPolicy = other.selectionPolicy->clone(); // Clone the selectionPolicy
         status = other.status;
-        facilityOptions = other.facilityOptions; // Reference remains the same
+        //facilityOptions = other.facilityOptions; // Reference remains the same
         life_quality_score = other.life_quality_score;
         economy_score = other.economy_score;
         environment_score = other.environment_score;
@@ -242,8 +242,8 @@ Plan::Plan(Plan &&other) noexcept
     other.selectionPolicy = nullptr; // Nullify the source pointer to avoid double deletion
 }
 
-/*//Move assignment operator
-Plan& Plan::operator=(Plan &&other) noexcept {
+//Move assignment operator
+/*Plan& Plan::operator=(Plan &&other) noexcept {
     if (this != &other) { // Avoid self-assignment
         // Clean up existing resources
         delete selectionPolicy;
