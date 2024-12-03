@@ -262,7 +262,7 @@ Simulation& Simulation::operator=(const Simulation& other) {
         }
     }
     return *this;
-}
+};
 
 Simulation& Simulation::operator=(const Simulation&& other){
     if (this != &other) {  // Avoid self-assignment
@@ -300,7 +300,7 @@ Simulation& Simulation::operator=(const Simulation&& other){
         }
     }
     return *this;
-}
+};
 
 Simulation::Simulation(Simulation &&other): 
     isRunning(other.isRunning),
@@ -308,7 +308,8 @@ Simulation::Simulation(Simulation &&other):
     actionsLog(std::move(other.actionsLog)),
     plans(std::move(other.plans)),
     settlements(std::move(other.settlements)),
-    facilitiesOptions(other.facilitiesOptions) {};
+    facilitiesOptions(other.facilitiesOptions) {
+};
 
 
     
