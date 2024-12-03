@@ -185,7 +185,7 @@ Plan::Plan(const Plan &other)
     }
 }
 
-/*// Copy assignment operator 
+// Copy assignment operator 
 Plan& Plan::operator=(const Plan &other) {
     if (this != &other) { // Avoid self-assignment
         // Clean up existing resources
@@ -202,7 +202,7 @@ Plan& Plan::operator=(const Plan &other) {
 
         // Copy primitive and directly copyable members
         plan_id = other.plan_id;
-        //settlement = other.settlement; // Reference remains the same
+        //settlement = other.settlement; // Reference remains the same - check what to do with this
         selectionPolicy = other.selectionPolicy->clone(); // Clone the selectionPolicy
         status = other.status;
         //facilityOptions = other.facilityOptions; // Reference remains the same
@@ -222,7 +222,7 @@ Plan& Plan::operator=(const Plan &other) {
         }
     }
     return *this;
-}*/
+}
 
 // Move constructor 
 Plan::Plan(Plan &&other) noexcept 
@@ -243,7 +243,7 @@ Plan::Plan(Plan &&other) noexcept
 }
 
 //Move assignment operator
-/*Plan& Plan::operator=(Plan &&other) noexcept {
+Plan& Plan::operator=(Plan &&other) noexcept {
     if (this != &other) { // Avoid self-assignment
         // Clean up existing resources
         delete selectionPolicy;
@@ -259,7 +259,7 @@ Plan::Plan(Plan &&other) noexcept
 
         // Transfer ownership of resources
         plan_id = other.plan_id;
-        //settlement = other.settlement;
+        //settlement = other.settlement;   //check what to do with this
         selectionPolicy = other.selectionPolicy;
         status = other.status;
         //facilityOptions = other.facilityOptions;
@@ -274,6 +274,6 @@ Plan::Plan(Plan &&other) noexcept
         other.selectionPolicy = nullptr;
     }
     return *this;
-}*/
+}
 
 

@@ -18,11 +18,3 @@ facility WildlifeReserve 2 4 2 1 4
 # plan <settlement_name> <selection_policy> 
 plan KfarSPL eco
 plan KiryatSPL bal
-
-
-
-# Adi added:
-settlement kar 2
-settlement zu 1
-plan kar env 
-plan zu nve

@@ -36,28 +36,6 @@ FacilityCategory FacilityType::getCategory() const {
     return category;
 };
 
-/*//FacilityType& FacilityType::operator=(const FacilityType&) = delete;
-    // Move Assignment Operator (not possible with const members)
-//FacilityType& FacilityType::operator=(FacilityType&&) = delete;
-
-    // Move Constructor (construct a new object)
-FacilityType::FacilityType(FacilityType&& other)
-        : category(other.category), // Copy const members (still valid because they're constant)
-          price(other.price),
-          lifeQuality_score(other.lifeQuality_score),
-          economy_score(other.economy_score),
-          environment_score(other.environment_score) {}
-
-
-FacilityType::FacilityType (FacilityType& other): category(other.category), // Copy const members (still valid because they're constant)
-          price(other.price),
-          lifeQuality_score(other.lifeQuality_score),
-          economy_score(other.economy_score),
-          environment_score(other.environment_score) {}
-;*/
-
-
-
 Facility::Facility(const string &name, const string &settlementName, const FacilityCategory category, const int price,
                     const int lifeQuality_score, const int economy_score, const int environment_score):
                     FacilityType(name, category, price, lifeQuality_score, economy_score, environment_score),

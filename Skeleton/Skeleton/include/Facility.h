@@ -27,12 +27,6 @@ class FacilityType {
         int getEconomyScore();
         FacilityCategory getCategory() const;
 
-        //Adi added:
-        //FacilityType& operator=(const FacilityType&) = delete;
-        //FacilityType& operator=(FacilityType&&) = delete;
-        //FacilityType (FacilityType&& other);
-        //FacilityType (FacilityType& other);
-
     protected:
         const string name;
         const FacilityCategory category;
