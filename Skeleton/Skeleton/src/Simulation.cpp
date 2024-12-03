@@ -278,26 +278,29 @@ Simulation& Simulation::operator=(const Simulation&& other){
         }
         actionsLog.clear();
 
-        // Copy primitive and directly copyable members
+        //moving others' resources
         isRunning = other.isRunning;
         planCounter = other.planCounter;
-        facilitiesOptions = std::vector<FacilityType>(other.facilitiesOptions);
-        //facilitiesOptions = std::move(other.facilitiesOptions);   //check what to do because the FaciltyType are const
 
-        // Deep copy plans        
+        //FaciltyType has const fields so it didn't let us move them from one to another. So instead we created a new one.
+        facilitiesOptions = std::vector<FacilityType>(other.facilitiesOptions);  
+        settlements = std::move(other.settlements);
+        actionsLog = std::move(other.actionsLog);
+
         for (const Plan& plan : other.plans) {
-            plans.push_back(plan);  // Assuming Plan has a deep copy constructor
+            plans.push_back(plan);  
         }
 
-        // Deep copy settlements
-        for (Settlement* settlement : other.settlements) {
-            settlements.push_back(settlement);
-        }
+
+        // // Deep copy settlements
+        // for (Settlement* settlement : other.settlements) {
+        //     settlements.push_back(settlement);
+        // }
         
-        // Deep copy actions log
-        for (BaseAction* action : other.actionsLog) {
-            actionsLog.push_back(action);  
-        }
+        // // Deep copy actions log
+        // for (BaseAction* action : other.actionsLog) {
+        //     actionsLog.push_back(action);  
+        // }
     }
     return *this;
 };
