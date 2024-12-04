@@ -58,13 +58,8 @@ void Simulation::start(){
         }
         else if (inf[0] == "settlement" && inf.size() == 3) {
             try {
-                //if (isValidCatNum(stoi(inf[2]))) {
                 isValidCatNum(stoi(inf[2]));
                 addAction(new AddSettlement(inf[1],SettlementType(static_cast<SettlementType>((stoi(inf[2])))))); 
-                //}
-                //else {
-                //    cout << "invalid type" << endl;
-                //}
             }
             catch (...) {
                 cout << "invalid Syntax" << endl;
