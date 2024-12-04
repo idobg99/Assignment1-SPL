@@ -10,7 +10,7 @@
  #include "globals.h"
  using namespace std;
 
-void isValidCatNum(int num) {
+void checkValidCatNum(int num) {
     if (num != 1 && num != 2 && num != 3) {
         throw std::invalid_argument("Invalid category number: " + std::to_string(num));
     }
@@ -58,7 +58,7 @@ void Simulation::start(){
         }
         else if (inf[0] == "settlement" && inf.size() == 3) {
             try {
-                isValidCatNum(stoi(inf[2]));
+                checkValidCatNum(stoi(inf[2]));
                 addAction(new AddSettlement(inf[1],SettlementType(static_cast<SettlementType>((stoi(inf[2])))))); 
             }
             catch (...) {
@@ -67,7 +67,7 @@ void Simulation::start(){
         }                                            
         else if (inf[0] == "facility" && inf.size() == 7) { 
             try {
-                isValidCatNum(stoi(inf[2]));
+                checkValidCatNum(stoi(inf[2]));
                 addAction(new AddFacility((inf[1]),static_cast<FacilityCategory>((stoi(inf[2]))),stoi(inf[3]),stoi(inf[4]),stoi(inf[5]),stoi(inf[6])));
             }
             catch (...) {

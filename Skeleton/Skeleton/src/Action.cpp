@@ -131,7 +131,7 @@ void ChangePlanPolicy::act(Simulation &simulation){
         Plan& plan = simulation.getPlan(planId);
 
         if (newPolicy == plan.getSelectionPolicy()){  //to change in selectionPolicy class
-            error("Cannot change selection policy");
+            error("Cannot change selection policy to the same one");
         }
         else{
             string prevPolicy = plan.getSelectionPolicy(); 
