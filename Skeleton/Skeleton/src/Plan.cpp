@@ -66,6 +66,7 @@ void Plan::addFacility(Facility* facility) {
 const string Plan::toString() const {
     string result = "Plan ID: " + std::to_string(plan_id) + "\n";
     result += "Settlement: " + settlement.getName() + "\n";
+    result += "Policy: " + selectionPolicy->toString() + "\n";
 
     // Explicit handling of PlanStatus enum
     result += "Plan Status: ";

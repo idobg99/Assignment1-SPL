@@ -72,6 +72,7 @@ void AddSettlement::act(Simulation &simulation){
         error("Settlement already exists");
     }
     else {
+        simulation.addSettlement(new Settlement(settlementName,settlementType));
         complete();
     }
 };

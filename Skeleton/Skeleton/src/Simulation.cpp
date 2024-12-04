@@ -10,24 +10,29 @@
  #include "globals.h"
  using namespace std;
 
+void isValidCatNum(int num) {
+    if (num != 1 && num != 2 && num != 3) {
+        throw std::invalid_argument("Invalid category number: " + std::to_string(num));
+    }
+};
+
 Simulation::Simulation(const string &configFilePath):isRunning(false), planCounter(0), 
      actionsLog(), plans(), settlements(), facilitiesOptions() {
      ifstream configFile(configFilePath);
      string line;
 
      while (getline(configFile, line)){       
-        vector<string> inf(Auxiliary::parseArguments(line));
-
-        if (inf.size() == 3 && inf[0]=="settlement"){            
-             addSettlement(new Settlement(inf[1],SettlementType(static_cast<SettlementType>((stoi(inf[2])))) ));
+         vector<string> inf(Auxiliary::parseArguments(line));
+         if (inf[0]=="settlement"&&inf.size() == 3){            
+             addSettlement(new Settlement(inf[1],SettlementType(static_cast<SettlementType>((stoi(inf[2]))))));
          }
-        else if (inf.size()==7 && inf[0]=="facility"){
+         else if (inf[0]=="facility"&&inf.size()==7){
              addFacility(FacilityType(inf[1],static_cast<FacilityCategory>((stoi(inf[2]))),stoi(inf[3]),stoi(inf[4]), stoi(inf[5]), stoi(inf[6])));
          }
-        else if (inf.size()==3 && inf[0]=="plan"){
-             SelectionPolicy* policy = stringToPolicy(inf[2]);          
-             addPlan(getSettlement(inf[1]),policy);                                         
-         }       
+         else if (inf[0]=="plan"&&inf.size()==3){
+             SelectionPolicy* policy = stringToPolicy(inf[2]);
+             addPlan(getSettlement(inf[1]),policy);                            
+         }
      }
      configFile.close();
 };
@@ -45,21 +50,34 @@ void Simulation::start(){
             continue;
         }
 
-        else if (inf[0] == "step" && inf.size() == 2) {             
+        if (inf[0] == "step" && inf.size() == 2) {             
             addAction(new SimulateStep(stoi(inf[1])));
         }
         else if (inf[0] == "plan" && inf.size() == 3) {           
             addAction(new AddPlan(inf[1], inf[2]));                   
         }
         else if (inf[0] == "settlement" && inf.size() == 3) {
-            SettlementType type = SettlementType(static_cast<SettlementType>((stoi(inf[2]))));
-            addAction(new AddSettlement(inf[1],type)); 
-            if (!isSettlementExists(inf[1])){
-                addSettlement(new Settlement(inf[1],type));
-            }   
+            try {
+                //if (isValidCatNum(stoi(inf[2]))) {
+                isValidCatNum(stoi(inf[2]));
+                addAction(new AddSettlement(inf[1],SettlementType(static_cast<SettlementType>((stoi(inf[2])))))); 
+                //}
+                //else {
+                //    cout << "invalid type" << endl;
+                //}
+            }
+            catch (...) {
+                cout << "invalid Syntax" << endl;
+            }
         }                                            
-        else if (inf[0] == "facility" && inf.size() == 7) {           
-            addAction(new AddFacility((inf[1]),static_cast<FacilityCategory>((stoi(inf[2]))),stoi(inf[3]),stoi(inf[4]),stoi(inf[5]),stoi(inf[6]))); 
+        else if (inf[0] == "facility" && inf.size() == 7) { 
+            try {
+                isValidCatNum(stoi(inf[2]));
+                addAction(new AddFacility((inf[1]),static_cast<FacilityCategory>((stoi(inf[2]))),stoi(inf[3]),stoi(inf[4]),stoi(inf[5]),stoi(inf[6])));
+            }
+            catch (...) {
+                cout << "invalid Syntax" << endl;
+            } 
         }
         else if (inf[0] == "planStatus" && inf.size() == 2) {           
             addAction(new PrintPlanStatus(stoi(inf[1]))); 
@@ -202,6 +220,21 @@ Simulation::~Simulation(){
     }
 };
 
+/*// Copy costructor:
+Simulation::Simulation(Simulation &other){  
+    for (Settlement* s: other.settlements){
+        addSettlement(new Settlement(*s));
+    }
+    for (BaseAction* a:other.actionsLog){
+        addAction(a->clone());
+    }
+    for (Plan p: other.plans){
+        Plan newP = Plan(p);
+        plans.push_back(newP);
+        planCounter++;
+    }
+};      */
+
 
 Simulation::Simulation(Simulation &other) : 
     isRunning(other.isRunning),
@@ -261,49 +294,9 @@ Simulation& Simulation::operator=(const Simulation& other) {
             actionsLog.push_back(action->clone());  // Assuming BaseAction has a clone method
         }
     }
+
     return *this;
-};
-
-Simulation& Simulation::operator=(const Simulation&& other){
-    if (this != &other) {  // Avoid self-assignment
-        // Clean up existing resources
-        plans.clear();
-        for (Settlement* settlement : settlements) {
-            delete settlement;
-        }
-        settlements.clear();
-
-        for (BaseAction* action : actionsLog) {
-            delete action;
-        }
-        actionsLog.clear();
-
-        //moving others' resources
-        isRunning = other.isRunning;
-        planCounter = other.planCounter;
-
-        //FaciltyType has const fields so it didn't let us move them from one to another. So instead we created a new one.
-        facilitiesOptions = std::vector<FacilityType>(other.facilitiesOptions);  
-        settlements = std::move(other.settlements);
-        actionsLog = std::move(other.actionsLog);
-
-        for (const Plan& plan : other.plans) {
-            plans.push_back(plan);  
-        }
-
-
-        // // Deep copy settlements
-        // for (Settlement* settlement : other.settlements) {
-        //     settlements.push_back(settlement);
-        // }
-        
-        // // Deep copy actions log
-        // for (BaseAction* action : other.actionsLog) {
-        //     actionsLog.push_back(action);  
-        // }
-    }
-    return *this;
-};
+}
 
 Simulation::Simulation(Simulation &&other): 
     isRunning(other.isRunning),
@@ -311,8 +304,6 @@ Simulation::Simulation(Simulation &&other):
     actionsLog(std::move(other.actionsLog)),
     plans(std::move(other.plans)),
     settlements(std::move(other.settlements)),
-    facilitiesOptions(other.facilitiesOptions) {
-};
-
+    facilitiesOptions(other.facilitiesOptions) {};
 
     
